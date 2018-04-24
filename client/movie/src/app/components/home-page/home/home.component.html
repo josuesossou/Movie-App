@@ -1,0 +1,12 @@
+<div>
+  <app-slideshow></app-slideshow>
+  <div class="container mt-5">
+    <app-menu></app-menu>
+  </div>
+  <div class="container  mb-5 c">
+    <div *ngFor="let category of categories">
+      <app-category>{{ category }}</app-category>
+    </div>
+  </div>
+</div>
+
