@@ -1,3 +1,16 @@
-<p>
-  chat-room works!
-</p>
+<div class="chat mb-5 text-center col-12 col-md-8 mx-auto pt-3">
+  <h2 class="pb-2">Chat Rooms</h2>
+  <div class="row col-12 mx-auto">
+    <div class="cards col-6 col-md-4 col-lg-3" *ngFor="let d of data">
+      <div class="card-body text-left p-1 pl-2" (click)="enterRoom()">
+        <div class="card-text">{{d.roomName}}</div>
+        <small class="card-text">{{d.creatorName}}</small>
+        <div class="card-text text-right">{{d.roomSize}} people</div>
+      </div>
+    </div>
+
+  </div>
+  <button class="btn btn-primary btn-md">
+    Create a Room
+  </button>
+</div>

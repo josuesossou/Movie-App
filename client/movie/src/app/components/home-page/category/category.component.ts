@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ContentChild, ContentChildren } from '@angular/core';
 
 @Component({
   selector: 'app-category',
@@ -17,10 +17,11 @@ export class CategoryComponent implements OnInit {
     "now",
     "me"
   ]
-
+  
   constructor() { }
 
   ngOnInit() {
+  
+    console.log()
   }
-
 }

@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule, ActivatedRoute, Routes } from '@angular/router';
 
 
 import { AppComponent } from './app.component';
@@ -10,7 +11,23 @@ import { CategoryComponent } from './components/home-page/category/category.comp
 import { ChatRoomComponent } from './components/home-page/chat-room/chat-room.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { DynamicHeightDirective } from './directive/dynamic-height.directive';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { PurchaseComponent } from './components/purchase/purchase.component';
+import { SearchComponent } from './components/search/search.component';
+import { LocalVideoComponent } from './components/local-video/local-video.component';
+import { RemoteVideoComponent } from './components/remote-video/remote-video.component';
+import { WorldChatComponent } from './components/world-chat/world-chat.component';
+import { VideoPlayerComponent } from './components/video-player/video-player.component';
+import { NavbarDirective } from './directive/navbar.directive';
+import { FooterComponent } from './components/footer/footer.component';
+import { Route } from '@angular/compiler/src/core';
 
+
+const routes:Routes = [
+  {path: '', component:HomeComponent},
+  {path: 'purchase', component:PurchaseComponent},
+  {path: '**', component:NotFoundComponent}
+]
 
 @NgModule({
   declarations: [
@@ -21,10 +38,20 @@ import { DynamicHeightDirective } from './directive/dynamic-height.directive';
     CategoryComponent,
     ChatRoomComponent,
     NotFoundComponent,
-    DynamicHeightDirective
+    DynamicHeightDirective,
+    NavbarComponent,
+    PurchaseComponent,
+    SearchComponent,
+    LocalVideoComponent,
+    RemoteVideoComponent,
+    WorldChatComponent,
+    VideoPlayerComponent,
+    NavbarDirective,
+    FooterComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent]
