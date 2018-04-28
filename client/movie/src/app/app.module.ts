@@ -21,11 +21,16 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
 import { NavbarDirective } from './directive/navbar.directive';
 import { FooterComponent } from './components/footer/footer.component';
 import { Route } from '@angular/compiler/src/core';
+import { ImageHeightDirective } from './directive/image-height.directive';
+import { VideoWidthDirective } from './directive/video-width.directive';
+import { LiveVideoDirective } from './directive/live-video.directive';
+import { WebrtcService } from './services/webrtc.service';
 
 
 const routes:Routes = [
   {path: '', component:HomeComponent},
-  {path: 'purchase', component:PurchaseComponent},
+  {path: 'purchase/:videoId', component:PurchaseComponent},
+  {path: 'video', component:VideoPlayerComponent},
   {path: '**', component:NotFoundComponent}
 ]
 
@@ -47,13 +52,16 @@ const routes:Routes = [
     WorldChatComponent,
     VideoPlayerComponent,
     NavbarDirective,
-    FooterComponent
+    FooterComponent,
+    ImageHeightDirective,
+    VideoWidthDirective,
+    LiveVideoDirective
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [WebrtcService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

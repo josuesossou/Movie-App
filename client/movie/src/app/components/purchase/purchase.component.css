@@ -1,0 +1,35 @@
+header{
+    background-color: #d8d8d8;
+    padding: 0;
+    margin: 0
+}
+.card-row{
+    background-color: none !important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap
+}
+.card-img{
+    box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2)
+}
+
+.row{
+    position: absolute;
+    bottom: 0;
+    right: 1rem;
+}
+.back{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0;
+}
+.container{
+    padding:0;
+}
+.my-link{
+    cursor: pointer;
+}
+.my-link:hover{
+    color: rgb(22, 175, 231)
+}

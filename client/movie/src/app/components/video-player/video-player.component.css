@@ -1,0 +1,67 @@
+.video-player{
+    width: 100vw;
+    height: 100vh;
+    background-color: #242323
+}
+.player{
+    background-color: #d8d8d8;
+}
+video{
+    width: 100%;
+    height:100%
+}
+.live-videos{
+    display: flex;
+    flex-wrap: nowrap;
+    height: 20%;
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+}
+.local, .remote{
+    height: 100%;    
+    border-radius: 8px;
+    background-color: wheat;
+}
+app-remote-video, app-local-video{
+    height: 100%;
+    width: 100%;
+}
+.buttons, .chat{
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.buttons{
+    display: flex;
+    flex-wrap: nowrap;
+    z-index: 5;
+}
+.chat{
+    width: 40%;
+    background-color: white;
+    height:300px;
+    z-index: 4;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.2)
+}
+.chat-text{
+    position: relative;
+    height: 100%;
+    overflow: scroll;
+}
+.texts{
+    position: relative;
+    margin-bottom: 9.3rem;
+}
+.send-text{
+    background-color: yellow;
+    position: fixed;
+    display: flex;
+    flex-wrap: nowrap;
+    bottom: 0;
+    padding-bottom: 3rem;
+    padding-top: 1rem
+}

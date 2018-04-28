@@ -6,7 +6,9 @@
   </div>
   <div class="container  mb-5 c">
     <div *ngFor="let category of categories">
-      <app-category>{{ category }}</app-category>
+      <app-category [da]="category">
+        {{ category }}
+      </app-category>
     </div>
   </div>
   <div class="container">

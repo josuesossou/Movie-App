@@ -1,4 +1,5 @@
-import { Component, OnInit, ContentChild, ContentChildren } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-category',
@@ -6,6 +7,13 @@ import { Component, OnInit, ContentChild, ContentChildren } from '@angular/core'
   styleUrls: ['./category.component.css']
 })
 export class CategoryComponent implements OnInit {
+  // @ContentChild({ read: TemplateRef }) 
+  // child: TemplateRef<any>;
+
+  // @ViewChild('container', { read: ViewContainerRef })
+  // container: ViewContainerRef;
+
+  @Input('da') dagf: string;
 
   data:string[] = [
     "hello",
@@ -18,10 +26,16 @@ export class CategoryComponent implements OnInit {
     "me"
   ]
   
-  constructor() { }
+  constructor(
+    public router:Router
+  ) { }
 
   ngOnInit() {
-  
-    console.log()
+    console.log(this.dagf);
+  }
+
+  purchase(d){
+    console.log('puchase', d);
+    this.router.navigate([`/purchase/${d}`])
   }
 }

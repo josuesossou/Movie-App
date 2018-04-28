@@ -10,6 +10,7 @@ export class PurchaseComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }

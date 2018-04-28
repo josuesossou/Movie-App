@@ -1,11 +1,14 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[appNavbar]'
 })
-export class NavbarDirective {
+export class NavbarDirective implements OnInit{
 
-  constructor(private el:ElementRef) { 
+  constructor(private el:ElementRef) {}
+
+  ngOnInit(){
+ 
     if(window.scrollY >= window.innerHeight && window.innerWidth >= 768) {
       this.el.nativeElement.style.display = 'flex';
       this.el.nativeElement.animate([
@@ -20,6 +23,7 @@ export class NavbarDirective {
       this.el.nativeElement.style.display = 'none';
       this.el.nativeElement.style.transition = '1s ease'
     }
+  
   }
 
   @HostListener('window: scroll') hideNavbarOnScroll(){
@@ -49,7 +53,7 @@ export class NavbarDirective {
         duration: 400,
         easing: 'ease'
       })
-    }else if(window.scrollY < window.innerHeight){
+    }else if(window.scrollY < window.innerHeight || window.innerWidth < 768){
       this.el.nativeElement.style.display = 'none';
     }
 

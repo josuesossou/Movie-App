@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VideoPlayerComponent implements OnInit {
 
+  isInvited:boolean = false;
+  isGroup:boolean = true;
+
   constructor() { }
 
   ngOnInit() {
