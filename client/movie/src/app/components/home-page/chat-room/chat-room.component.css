@@ -46,3 +46,10 @@ small{
     position: relative;
     top: -0.8em;
 }
+.room{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}

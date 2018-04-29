@@ -1,7 +1,17 @@
-.video-player{
+.noverflow{
+    overflow-y: hidden;
+    max-width: 100vw;
     width: 100vw;
     height: 100vh;
-    background-color: #242323
+    max-height: 100vh;
+}
+.video-player{
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    background-color: #242323;
+    overflow-y: hidden;
 }
 .player{
     background-color: #d8d8d8;
@@ -13,21 +23,26 @@ video{
 .live-videos{
     display: flex;
     flex-wrap: nowrap;
-    height: 20%;
-    position: absolute;
+    height: 25%;
+    position: fixed;
     bottom: 0;
     width: 100vw;
+    transform: translateY(0%);
+    transition: .4s ease;
 }
 .local, .remote{
     height: 100%;    
-    border-radius: 8px;
-    background-color: wheat;
+}
+.remote{
+    bottom: 5px;
+    position: absolute;
+    right: 10px;
 }
 app-remote-video, app-local-video{
     height: 100%;
     width: 100%;
 }
-.buttons, .chat{
+.buttons, .chat, .invite{
     position: absolute;
     bottom: 3px;
     left: 50%;
@@ -38,7 +53,7 @@ app-remote-video, app-local-video{
     flex-wrap: nowrap;
     z-index: 5;
 }
-.chat{
+.chat, .invite{
     width: 40%;
     background-color: white;
     height:300px;
@@ -47,7 +62,7 @@ app-remote-video, app-local-video{
     border-top-left-radius: 5px;
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.2)
 }
-.chat-text{
+.chat-text, .invites{
     position: relative;
     height: 100%;
     overflow: scroll;
@@ -56,12 +71,17 @@ app-remote-video, app-local-video{
     position: relative;
     margin-bottom: 9.3rem;
 }
-.send-text{
-    background-color: yellow;
+.send-text, .send-invite{
+    background-color: #51C7F3;
     position: fixed;
     display: flex;
     flex-wrap: nowrap;
     bottom: 0;
     padding-bottom: 3rem;
     padding-top: 1rem
+}
+
+.hide{
+    transform: translateY(100%);
+    transition: .4s ease;
 }

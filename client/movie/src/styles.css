@@ -1,3 +1,7 @@
 html,body{
     background-color: #f5f5f5 !important;
 }
+video{
+    width: 100%;
+    border-radius: 5px;
+}

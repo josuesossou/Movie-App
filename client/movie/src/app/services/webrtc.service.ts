@@ -17,12 +17,15 @@ export class WebrtcService {
       debug: false,
       localVideoEl: 'local-video',
       remoteVideosEl: 'remote-video',
-      autoRequestMedia: true,
+      autoRequestMedia: false,
       adjustPeerVolume: true,
+      autoRemoveVideos:true,
       media: {
-        video: true, audio: true
+        video:{ width: 1280, height: 720 }, 
+        audio: true
       }
     });
+
   }
 
    //use webrtc functions as observables
@@ -43,21 +46,6 @@ export class WebrtcService {
       });
     });
   }
-
-  emitRoom(){
-    return new Observable<any>(observer=>{
-      this.webrtc.emit('roomname', 'thisroom')
-    })
-  }
-
-  listenRoom(){
-    return new Observable<any>(observer =>{
-      this.webrtc.on('rooms', (room)=>{
-        console.log('rooms',room)
-      })
-    })
-  }
-
 
   onConnectionReady() {
       return new Observable<any>(observer => {
@@ -90,6 +78,11 @@ export class WebrtcService {
               observer.next({ video: video, peer: peer});
           });
       });
+  }
+
+  leaveRoom(room){
+    this.webrtc.leaveRoom(room);
+    this.webrtc.stopLocalVideo()
   }
 
 }

@@ -1,18 +1,19 @@
+<div class="noverflow">
 <div class="video-player pt-3">
-  <div appVideoWidth class="player mx-auto col-11 col-md-9">
+  <div appVideoWidth class="player mx-auto col-11 col-md-8">
     <video>
       <source>
     </video>
   </div>
-  <div class="live-videos p-1" *ngIf="isGroup && needLive">
+  <div class="live-videos p-1 pl-2" [ngClass]="{hide:needLive}">
     <div class="local mr-auto" appLiveVideo><app-local-video></app-local-video></div>
-    <div class="remote ml-auto" appLiveVideo><app-remote-video></app-remote-video></div>
+    <div class="remote" appLiveVideo><app-remote-video></app-remote-video></div>
   </div>
   <div class="buttons">
-    <button class="btn btn-light btn-sm m-1" (click)="needLive = !needLive">Live</button>
-    <button class="btn btn-light btn-sm m-1" (click)="needChat = !needChat">Chat</button>
-    <button class="btn btn-light btn-sm m-1" >Back</button>
-    <button class="btn btn-light btn-sm m-1" *ngIf="!isInvited">Invite</button>
+    <button class="btn btn-light btn-sm m-1" (click)="needLive=!needLive">Live</button>
+    <button class="btn btn-light btn-sm m-1" (click)="show('needChat')">Chat</button>
+    <button class="btn btn-light btn-sm m-1" (click)="home()">Home</button>
+    <button class="btn btn-light btn-sm m-1" *ngIf="!isInvited" (click)="show('needInvite')">Invite</button>
     <button class="btn btn-light btn-sm m-1" *ngIf="isInvited">Leave</button>
   </div>
   <div class="chat" *ngIf="needChat">
@@ -27,5 +28,25 @@
       <button class="btn btn-primary btn-sm mx-auto">Send</button>
     </div>
   </div>
-  <div class="invite"></div>
+  <div class="invite" *ngIf="needInvite">
+    <div class="invites">
+        <div class="texts">
+            <p>dsfadfadsfdf</p>
+            <p>dsfadfadsfdf</p>
+
+            <p>dsfadfadsfdf</p>
+            <p>dsfadfadsfdf</p>
+
+            <p>dsfadfadsfdf</p>
+            <p>dsfadfadsfdf</p>
+
+            <p>dsfadfadsfdf</p>
+            <p>dsfadfadsfdf</p>
+        </div>
+    </div>
+    <div class="send-invite col-12">
+      <button class="btn btn-primary btn-block mx-auto">Send</button>
+    </div>
+  </div>
+</div>
 </div>

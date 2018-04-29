@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, ActivatedRoute, Routes } from '@angular/router';
 
-
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home-page/home/home.component';
 import { SlideshowComponent } from './components/home-page/slideshow/slideshow.component';
@@ -18,19 +17,23 @@ import { LocalVideoComponent } from './components/local-video/local-video.compon
 import { RemoteVideoComponent } from './components/remote-video/remote-video.component';
 import { WorldChatComponent } from './components/world-chat/world-chat.component';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
-import { NavbarDirective } from './directive/navbar.directive';
 import { FooterComponent } from './components/footer/footer.component';
-import { Route } from '@angular/compiler/src/core';
+
+import { LiveVideoDirective } from './directive/live-video.directive';
+import { NavbarDirective } from './directive/navbar.directive';
 import { ImageHeightDirective } from './directive/image-height.directive';
 import { VideoWidthDirective } from './directive/video-width.directive';
-import { LiveVideoDirective } from './directive/live-video.directive';
+
+//sevices
 import { WebrtcService } from './services/webrtc.service';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 const routes:Routes = [
   {path: '', component:HomeComponent},
   {path: 'purchase/:videoId', component:PurchaseComponent},
   {path: 'video', component:VideoPlayerComponent},
+  {path: 'chat-room/:roomNamve', component:ChatComponent},
   {path: '**', component:NotFoundComponent}
 ]
 
@@ -55,7 +58,8 @@ const routes:Routes = [
     FooterComponent,
     ImageHeightDirective,
     VideoWidthDirective,
-    LiveVideoDirective
+    LiveVideoDirective,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

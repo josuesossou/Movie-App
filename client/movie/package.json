@@ -27,6 +27,8 @@
     "jquery": "^3.3.1",
     "popper.js": "^1.14.3",
     "rxjs": "^5.5.6",
+    "simplewebrtc": "^3.0.1",
+    "webrtc-adapter": "^6.1.5",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {

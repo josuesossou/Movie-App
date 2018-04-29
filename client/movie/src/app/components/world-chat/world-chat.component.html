@@ -1,3 +1,16 @@
-<p>
-  world-chat works!
-</p>
+<div class="chat col-12 col-md-6 col-lg-4"  [ngClass]="{show:needChat}">
+  <div class="chat-text col-12">
+    <div class="texts">
+        <p>dsfadfadsfdf</p>
+        <p>dsfadfadsfdf</p>
+    </div>
+  </div>
+  <div class="send-text col-12">
+    <input type="text" class="form-control col-8 mx-auto">
+    <button class="btn btn-primary btn-sm mx-auto col-3">Send</button>
+  </div>
+  <small class="col-12 text-center">This is a global chat. Anyone can see your text</small>
+</div>
+<div class="world-chat">
+  <button (click)="needChat = !needChat"><small>Chat</small></button>
+</div>

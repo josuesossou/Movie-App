@@ -1,0 +1,115 @@
+.chat-sidebar{
+    height: 100vh;
+    position: fixed;
+    background-color: rgb(6, 55, 71);
+    margin: 0;
+    color: white
+}
+#users ol{
+    margin-top: 2rem;
+}
+#users ol li{
+    border-radius: 8px;
+    padding: .9rem;
+    padding-left: 2rem;
+    font-size: 1.5rem;
+    font-weight: 450;
+    color: black;
+    margin: 1.4rem 0;
+    background-color: rgb(226, 226, 226);
+}
+
+ ol{
+    list-style: none;
+    position: relative;
+    display: block;
+    overflow-wrap: break-word;
+}
+.tittle{
+    margin: 0;
+}
+.tittle h4{
+    margin-right: 10px;
+}
+.tittle p{
+    line-height: wrap;
+    margin-top: 3px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    opacity: .3;
+}
+.message{
+    margin-top: -15px;
+}
+.message p{
+    font-size: 1.2rem;
+    font-weight: 450
+}
+
+.chat-main{
+    min-height: 100%;
+    right: 0;
+    position: absolute;
+    background-color: rgba(235, 230, 230, 0.438);
+}
+.cont{
+    min-height: 100vh;
+    background-color: white;
+    padding-bottom: 120px;
+    box-shadow: 0px 0px 1px 1px  rgba(170, 170, 170, 0.438);
+}
+
+.chat-footer{
+    position: fixed;
+    display: block;
+    height: wrap;
+    width: wrap;
+    right: 0;
+    bottom: 0;
+}
+.contain{
+    padding: 10px 0;
+    background-color: rgba(204, 204, 204, 0.575);
+}
+
+form {
+    height: 50px;
+    width: 80%;
+    display: block;
+    position: relative;
+}
+
+.chat-footer form .input{
+    height: 100%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.chat-footer form .button {
+    height: 100%;
+    top: 50%;
+    transform: translateY(-53%);
+    position: relative;
+    background-color: rgb(6, 55, 71, 0.822);
+    color: white;
+    border: 0px outset rgb(6, 55, 71, 0.822);
+    font-weight: bold;
+    text-align: center;
+    font-size: 1em;
+}
+
+.chat-footer .b {
+    height: 50px;
+    position: relative;
+    background-color: rgba(6, 55, 71, 0.822);
+    color: white;
+    border: 0px solid white;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    margin-block-end: 10px
+}
+.chat-footer .b:disabled{
+    background-color: rgba(56, 56, 56, 0.63);
+
+}
