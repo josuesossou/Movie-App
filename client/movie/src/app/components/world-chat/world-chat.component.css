@@ -55,7 +55,7 @@
 }
 
 .world-chat button{
-    height: 50px;
+    height: 45px;
     width: 60px;
     border-top-right-radius: 100%;
     position: fixed;
@@ -68,12 +68,10 @@
 }
 .world-chat button small{
     position: absolute;
-    left: 5px;
+    left: 8px;
     bottom: 8px;
     border-radius: 5px;
-    font-weight: bold;
     padding: 1px;
-    background-color: white
 }
 .world-chat button:focus{
     outline: none !important;

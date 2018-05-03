@@ -4,8 +4,26 @@
   "description": "Server handeling authentication and database",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/server.js --exec babel-node --presets es2015,stage-2"
   },
   "author": "Josue Sossou",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.0.16",
+    "socket.io": "^2.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "eslint-config-rallycoding": "^3.2.0",
+    "expect": "^22.4.3",
+    "mocha": "^5.1.1",
+    "nodemon": "^1.17.3",
+    "supertest": "^3.0.0"
+  }
 }

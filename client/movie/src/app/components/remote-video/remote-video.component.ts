@@ -17,6 +17,7 @@ export class RemoteVideoComponent implements OnInit {
       console.log('data',data);
       this.video = data.video.src;
     });
+    
     this.webrtc.onReadyToCall('alo').subscribe((data) => {
       // console.log('ready', data);
     });

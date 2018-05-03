@@ -17,7 +17,7 @@ export class WebrtcService {
       debug: false,
       localVideoEl: 'local-video',
       remoteVideosEl: 'remote-video',
-      autoRequestMedia: false,
+      autoRequestMedia: true,
       adjustPeerVolume: true,
       autoRemoveVideos:true,
       media: {
