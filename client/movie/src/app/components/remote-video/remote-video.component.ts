@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebrtcService } from '../../services/webrtc.service';
-
+// @ts-check
 @Component({
   selector: 'app-remote-video',
   templateUrl: './remote-video.component.html',

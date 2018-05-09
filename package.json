@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "eslint-config-rallycoding": "^3.2.0",
-    "simplewebrtc": "^3.0.1"
+    "eslint-config-rallycoding": "^3.2.0"
   }
 }
