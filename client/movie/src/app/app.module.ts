@@ -1,6 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, ActivatedRoute, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FlashMessagesModule } from 'angular2-flash-messages';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home-page/home/home.component';
@@ -27,6 +30,7 @@ import { VideoWidthDirective } from './directive/video-width.directive';
 //sevices
 import { WebrtcService } from './services/webrtc.service';
 import { ChatComponent } from './components/chat/chat.component';
+import { SocketIoService } from './services/socket-io.service';
 
 
 const routes:Routes = [
@@ -63,9 +67,15 @@ const routes:Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    FormsModule,
+    HttpClientModule,
+    FlashMessagesModule.forRoot()
   ],
-  providers: [WebrtcService],
+  providers: [
+    WebrtcService,
+    SocketIoService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

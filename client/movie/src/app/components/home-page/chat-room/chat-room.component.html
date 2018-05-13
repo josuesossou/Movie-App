@@ -1,11 +1,11 @@
 <div class="chat mb-5 text-center col-12 col-md-8 mx-auto pt-3">
   <h2 class="pb-2">Chat Rooms</h2>
   <div class="row col-12 mx-auto">
-    <div class="cards col-6 col-md-4 col-lg-3" *ngFor="let d of data">
-      <div class="card-body text-left p-1 pl-2" (click)="enterRoom(d.roomName)">
-        <div class="card-text">{{d.roomNameShort}}</div>
-        <small class="card-text">{{d.creatorName}}</small>
-        <div class="card-text text-right">{{d.roomSize}} people</div>
+    <div class="cards col-6 col-md-4 col-lg-3" *ngFor="let room of rooms">
+      <div class="card-body text-left p-1 pl-2" (click)="enterRoom(d._id)">
+        <div class="card-text">{{room.roomNameShort}}</div>
+        <small class="card-text">{{room.creator_name}}</small>
+        <div class="card-text text-right">{{room.room_size}} people</div>
       </div>
     </div>
 
@@ -13,8 +13,13 @@
   <button class="btn btn-primary btn-md" (click)="isCreateRoom = !isCreateRoom">
     Create a Room
   </button>
+  {{ roomName }}
   <div class="room col-8" *ngIf = "isCreateRoom">
-    <input type="text" class="roomName form-control col-8 mr-2">
+    <input 
+      type="text"
+      class="roomName form-control col-8 mr-2"
+      [(ngModel)]="roomName"
+      name="roomName">
     <input type="button" class="btn btn-primary" (click)="createRoom()" value="Create">
   </div>
 </div>

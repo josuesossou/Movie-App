@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Chat } from '../../../model/chat-rooms';
+import { Room } from '../../../model/chat-rooms';
 import { Router } from '@angular/router';
+import { SocketIoService } from '../../../services/socket-io.service';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 @Component({
   selector: 'app-chat-room',
@@ -9,84 +11,68 @@ import { Router } from '@angular/router';
 })
 export class ChatRoomComponent implements OnInit {
 
-  data:Chat[] = [
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Black Panter",
-      roomName: "Black Panter",
-      roomSize: 5
-    },
-    {
-      creatorName: "Kokoo",
-      roomNameShort: "Dawn At the Planet of the Apes",
-      roomName: "Dawn At the Planet of the Apes",
-      roomSize: 52
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Batman",
-      roomName: "Batman",
-      roomSize: 532
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Iron Man",
-      roomName: "Iron Man",
-      roomSize: 52
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Matrix",
-      roomName: "Matrix",
-      roomSize: 544
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "The Fantastic Four",
-      roomName: "The Fantastic Four",
-      roomSize: 512
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Spidy",
-      roomName: "Spidy",
-      roomSize: 55
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Black Panter",      
-      roomName: "Black Panter",
-      roomSize: 5
-    },
-    {
-      creatorName: "Kojo",
-      roomNameShort: "Black Panter",
-      roomName: "Black Panter",
-      roomSize: 5
-    },
-  ]
+  rooms:Room[];
 
   isCreateRoom:boolean = false;
+  roomName:string;
 
   constructor(
-    private router:Router
+    private router:Router,
+    private socketIO:SocketIoService,
+    private flashMessage:FlashMessagesService
   ) { }
 
   ngOnInit() {
-    this.data.forEach(d=>{
-      if(d.roomName.length > 10 ) {
-        d.roomNameShort = d.roomNameShort.slice(0,9) + '...';
-      }
-    })
+    this.socketIO.getChatRooms().then((rooms:Room[]) => {
+      this.rooms = rooms;
+      //making sure long names are cut short
+      this.rooms.forEach(room => {
+        if(room.room_name.length > 10 ) {
+          return room.roomNameShort = room.room_name.slice(0,9) + '...';
+        } else {
+          return room.roomNameShort = room.room_name;
+        }
+      });
+      console.log(this.rooms)
+    }).catch(e => {
+      console.log(e)
+    });
   }
 
-  enterRoom(name){
+  enterRoom(name, id){
     if(confirm(`Do you want to join ${name}?`)){
+      const data = {
+        joinRoomName: id,
+        room_name: name,
+        isJoinedRoom: true,
+        isRoomCreator: false
+      };
+
+      this.socketIO.joinRoom(data, id)
       this.router.navigate([`chat-room/${name}`])
     }
   }
 
   createRoom() {
     this.isCreateRoom = false;
+    if(confirm(`Do you want to create ${this.roomName} room?`)){
+      const data = {
+        joinRoomName: '',
+        room_name: this.roomName,
+        isJoinedRoom: true,
+        isRoomCreator: true
+      };
+
+      const chatRoomData = {
+        room_name: this.roomName,
+      }
+
+      this.socketIO.createRoom(data, chatRoomData).then((d) => {
+          this.flashMessage.show('Room was successfully created', { cssClass: 'alert-success', timeout: 3000 });
+          this.router.navigate([`chat-room/${this.roomName}`]);
+      }).catch(e => {
+        this.flashMessage.show('Room name already exist. Chose another name', { cssClass: 'alert-danger', timeout: 3000 });
+      });
+    }
   }
 }

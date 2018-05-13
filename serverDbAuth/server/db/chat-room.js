@@ -5,19 +5,20 @@ const ChatRoom = mongoose.model('Chat-room', {
     room_name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     creator_name: {
         type: String,
         required: true,
         trim: true
     },
-    _creatorID: {
-        type: mongoose.Schema.Types.ObjectId,
+    members: {
+        type: Array,
         required: true,
-        trim: true
     },
     room_size: {
+        default: 0,
         type: Number,
         required: true
     }

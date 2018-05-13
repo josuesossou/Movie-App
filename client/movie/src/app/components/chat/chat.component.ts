@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SocketIoService } from '../../services/socket-io.service';
+import { Message } from '../../model/message'
 
 @Component({
   selector: 'app-chat',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatComponent implements OnInit {
 
-  constructor() { }
+  message:Message;
+  //getting room name
+  roomName:string;
+
+  constructor(private socketIO:SocketIoService) { }
 
   ngOnInit() {
+    this.socketIO.removeSocketEvent('roomMessage');
   }
+  
+  sendGroupMessage() {
+    this.message = {
+      roomName: '',
+      senderName: '',
+    }
 
+    this.socketIO.sendMessage('groupMessage', this.message)
+  }
 }
