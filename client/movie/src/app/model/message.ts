@@ -1,15 +1,11 @@
 export interface Message {
-    senderName?:string,
-    messageText?:string,
-    timeStamp?:string,
-    roomName?:string
-}
-
-export interface UserData {
-    _id?:string,
-    user?:string,
-    messageText?:string,
-    timeStamp?:string,
-    roomName?:string,
-    creator
+    senderName?: string;
+    senderId?: string;
+    messageText?: string;
+    timeStamp?: number;
+    roomName?: string;
+    joinedRoomName?: string;
+    isJoinMessage?: boolean;
+    isLeaveMessage?: boolean;
+    isToGroup?: boolean;
 }

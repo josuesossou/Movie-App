@@ -4,6 +4,8 @@ import { RouterModule, ActivatedRoute, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FlashMessagesModule } from 'angular2-flash-messages';
+import { MomentModule } from 'angular2-moment';
+import { TimeAgoPipe } from 'time-ago-pipe';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home-page/home/home.component';
@@ -27,19 +29,21 @@ import { NavbarDirective } from './directive/navbar.directive';
 import { ImageHeightDirective } from './directive/image-height.directive';
 import { VideoWidthDirective } from './directive/video-width.directive';
 
-//sevices
+// sevices
 import { WebrtcService } from './services/webrtc.service';
 import { ChatComponent } from './components/chat/chat.component';
 import { SocketIoService } from './services/socket-io.service';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
 
-const routes:Routes = [
-  {path: '', component:HomeComponent},
-  {path: 'purchase/:videoId', component:PurchaseComponent},
-  {path: 'video', component:VideoPlayerComponent},
-  {path: 'chat-room/:roomNamve', component:ChatComponent},
-  {path: '**', component:NotFoundComponent}
-]
+const routes: Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'purchase/:videoId', component: PurchaseComponent},
+  {path: 'video', component: VideoPlayerComponent},
+  {path: 'chat-room/:room_name', component: ChatComponent},
+  {path: '**', component: NotFoundComponent}
+];
 
 @NgModule({
   declarations: [
@@ -63,14 +67,18 @@ const routes:Routes = [
     ImageHeightDirective,
     VideoWidthDirective,
     LiveVideoDirective,
-    ChatComponent
+    ChatComponent,
+    TimeAgoPipe,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes),
     FormsModule,
     HttpClientModule,
-    FlashMessagesModule.forRoot()
+    FlashMessagesModule.forRoot(),
+    MomentModule
   ],
   providers: [
     WebrtcService,

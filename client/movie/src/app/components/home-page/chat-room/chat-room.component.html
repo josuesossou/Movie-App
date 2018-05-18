@@ -2,7 +2,7 @@
   <h2 class="pb-2">Chat Rooms</h2>
   <div class="row col-12 mx-auto">
     <div class="cards col-6 col-md-4 col-lg-3" *ngFor="let room of rooms">
-      <div class="card-body text-left p-1 pl-2" (click)="enterRoom(d._id)">
+      <div class="card-body text-left p-1 pl-2" (click)="joinRoom(room.room_name, room._id)">
         <div class="card-text">{{room.roomNameShort}}</div>
         <small class="card-text">{{room.creator_name}}</small>
         <div class="card-text text-right">{{room.room_size}} people</div>
@@ -13,7 +13,6 @@
   <button class="btn btn-primary btn-md" (click)="isCreateRoom = !isCreateRoom">
     Create a Room
   </button>
-  {{ roomName }}
   <div class="room col-8" *ngIf = "isCreateRoom">
     <input 
       type="text"

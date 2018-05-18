@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-category',
@@ -7,35 +7,35 @@ import { Router } from '@angular/router'
   styleUrls: ['./category.component.css']
 })
 export class CategoryComponent implements OnInit {
-  // @ContentChild({ read: TemplateRef }) 
+  // @ContentChild({ read: TemplateRef })
   // child: TemplateRef<any>;
 
   // @ViewChild('container', { read: ViewContainerRef })
   // container: ViewContainerRef;
 
-  @Input('da') dagf: string;
+  @Input() da: string;
 
-  data:string[] = [
-    "hello",
-    "welcom",
-    "you",
-    "now",
-    "welcom",
-    "you",
-    "now",
-    "me"
-  ]
-  
+  data: string[] = [
+    'Hello',
+    'Hello',
+    'Hello',
+    'Hello',
+    'Hello',
+    'Hello',
+    'Hello',
+    'Hello',
+  ];
+
   constructor(
-    public router:Router
+    public router: Router
   ) { }
 
   ngOnInit() {
-    console.log(this.dagf);
+    console.log(this.da);
   }
 
-  purchase(d){
+  purchase(d) {
     console.log('puchase', d);
-    this.router.navigate([`/purchase/${d}`])
+    this.router.navigate([`/purchase/${d}`]);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Room } from '../../../model/chat-rooms';
 import { Router } from '@angular/router';
 import { SocketIoService } from '../../../services/socket-io.service';
@@ -10,37 +10,24 @@ import { FlashMessagesService } from 'angular2-flash-messages';
   styleUrls: ['./chat-room.component.css']
 })
 export class ChatRoomComponent implements OnInit {
+  @Input() 'rooms': Room[];
 
-  rooms:Room[];
-
-  isCreateRoom:boolean = false;
-  roomName:string;
+  isCreateRoom = false;
+  roomName: string;
 
   constructor(
-    private router:Router,
-    private socketIO:SocketIoService,
-    private flashMessage:FlashMessagesService
+    private router: Router,
+    private socketIO: SocketIoService,
+    private flashMessage: FlashMessagesService
   ) { }
 
   ngOnInit() {
-    this.socketIO.getChatRooms().then((rooms:Room[]) => {
-      this.rooms = rooms;
-      //making sure long names are cut short
-      this.rooms.forEach(room => {
-        if(room.room_name.length > 10 ) {
-          return room.roomNameShort = room.room_name.slice(0,9) + '...';
-        } else {
-          return room.roomNameShort = room.room_name;
-        }
-      });
-      console.log(this.rooms)
-    }).catch(e => {
-      console.log(e)
-    });
+
   }
 
-  enterRoom(name, id){
-    if(confirm(`Do you want to join ${name}?`)){
+  joinRoom(name, id) {
+    if (!this.socketIO.userData) {
+      confirm(`Do you want to join ${name}? You will automatically be removed from any currently joined room.`);
       const data = {
         joinRoomName: id,
         room_name: name,
@@ -48,30 +35,45 @@ export class ChatRoomComponent implements OnInit {
         isRoomCreator: false
       };
 
-      this.socketIO.joinRoom(data, id)
-      this.router.navigate([`chat-room/${name}`])
+      this.socketIO.joinRoom(data, id).then(res => {
+        this.flashMessage.show(`You have successfully Joined ${name}`, { cssClass: 'alert-success', timeout: 3000 });
+        this.router.navigate([`chat-room/${name}`]);
+      }).catch(e => {
+        this.flashMessage.show(e, { cssClass: 'alert-danger', timeout: 3000 });
+      });
+    } else {
+      const data = {
+        joinRoomName: '',
+        room_name: '',
+        isJoinedRoom: false,
+        isRoomCreator: false
+      };
+
+      this.socketIO.leaveRoom(data);
     }
   }
 
   createRoom() {
-    this.isCreateRoom = false;
-    if(confirm(`Do you want to create ${this.roomName} room?`)){
+    if (confirm(`Do you want to create ${this.roomName} room?`)) {
+      // data for userdata
       const data = {
         joinRoomName: '',
         room_name: this.roomName,
         isJoinedRoom: true,
         isRoomCreator: true
       };
-
+      // data for chat room
       const chatRoomData = {
         room_name: this.roomName,
-      }
+      };
 
       this.socketIO.createRoom(data, chatRoomData).then((d) => {
-          this.flashMessage.show('Room was successfully created', { cssClass: 'alert-success', timeout: 3000 });
-          this.router.navigate([`chat-room/${this.roomName}`]);
+        this.flashMessage.show(`${this.roomName} was successfully created`, { cssClass: 'alert-success', timeout: 3000 });
+        this.router.navigate([`chat-room/${this.roomName}`]);
+        this.roomName = '';
+        this.isCreateRoom = false;
       }).catch(e => {
-        this.flashMessage.show('Room name already exist. Chose another name', { cssClass: 'alert-danger', timeout: 3000 });
+        this.flashMessage.show(`${e} '${this.roomName}'. Name already exist.`, { cssClass: 'alert-danger', timeout: 3000 });
       });
     }
   }

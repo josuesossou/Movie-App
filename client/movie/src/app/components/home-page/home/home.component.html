@@ -2,7 +2,7 @@
   <app-navbar></app-navbar>
   <app-slideshow></app-slideshow>
   <div class="container mt-5">
-    <app-menu></app-menu>
+    <app-menu [joinedRoom]="joinedRoom"></app-menu>
   </div>
   <div class="container  mb-5 c">
     <div *ngFor="let category of categories">
@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="container">
-    <app-chat-room></app-chat-room>
+    <app-chat-room [rooms]="rooms"></app-chat-room>
   </div>
   <app-world-chat></app-world-chat>
   <app-footer></app-footer>

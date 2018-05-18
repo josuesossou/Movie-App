@@ -1,21 +1,49 @@
 <div class="chat-layout">
 
-    <div class="chat-sidebar d-none d-md-block col-3 pt-3">
-        <h2 class="ml-4">People</h2>
-        <div id="users"></div>
+    <div class="chat-sidebar d-none d-md-block col-3">
+        <div class="sidebar-header col-3 pt-3">
+            <h3 class="" *ngIf="chatRoom">{{ chatRoom.room_size }} Members</h3>
+            <div class="wrap mb-2">
+                <small *ngIf="chatRoom"> Online: {{ membersInRoom.length }}</small>
+                <small *ngIf="chatRoom">Admin: {{ chatRoom.creator_name | uppercase}}</small>
+            </div>
+        </div>
+        <div class="scroll" *ngIf="chatRoom">
+            <div class="member" *ngFor="let member of chatRoom.members">
+                <div class="wrap">
+                    <small>{{member.memberName}}</small>
+                    <small *ngIf="!member.status" id="offline">Offline</small>
+                    <small *ngIf="member.status" id="online">Online</small>
+                </div>
+                <small>Joined on 12/3/4 4:30</small>
+            </div>
+        </div>
     </div>
 
     <div class="chat-main col-12 col-md-9">
         <div class="container cont pt-5 pl-5">
-            <ol id="messages"></ol>
+            <div *ngFor="let message of messages" class="message">
+                <div [ngClass]="message.class">
+                    <small class="from" *ngIf="message.isToGroup && !message.isJoinMessage && !message.isLeaveMessage">{{ message.senderName }}</small>
+                    <small class="from" *ngIf="message.isJoinMessage || message.isLeaveMessage">Admin</small>
+                    <small class="time" *ngIf="message.isToGroup || !message.isJoinMessage">{{ message.timeStamp | amTimeAgo: m }}</small>
+                    <p >{{ message.messageText }}</p>
+                </div>
+            </div>
         </div>
     </div>
-    
     <div class="chat-footer col-12 col-md-9">
         <div class="container contain">
-            <form id="messageForm" class="col-12 d-block col-md-9 d-md-inline-block">
-                <input name="message" minlength="1" type="text" class="input col-8 mr-3 ml-2" autofocus autocomplete="off">
-                <input id="submit" type="submit" value="Send" class="button col-2 col-md-3 ml-2">
+            <form id="messageForm" class="col-12 d-block col-md-9 d-md-flex">
+                <textarea 
+                    name="text"
+                    minlength="1" 
+                    type="text" 
+                    class="input col-8 mr-3 ml-2" 
+                    autofocus 
+                    autocomplete="off"
+                    [(ngModel)]="text"></textarea>
+                <input id="submit" type="button" value="Send" class="button col-2 col-md-3 ml-2" (click)="sendGroupMessage()">
             </form>
         </div>
     </div>

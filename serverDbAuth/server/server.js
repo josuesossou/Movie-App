@@ -11,7 +11,7 @@ import { UsersData } from './db/users_data';
 import { User } from './db/users';
 
 //lib imports
-import { getChatRoom } from './lib/chat-room';
+import { getChatRoom, updateChatRoom } from './lib/chat-room';
 
 /*** MIDDLEWARE imports ****/
 import { authenticate } from './middleware/authenticate';
@@ -74,35 +74,69 @@ app.get('/chat-rooms/:id', authenticate, async (req, res) => {
 
     res.send(room);
 });
-//updaing a chat room
+//updaing a chat room members
 app.patch('/chat-rooms/:id', async (req, res) => {
     const body = _.pick(req.body, ['member']);
     const id = req.params.id;
 
-    if (!ObjectID.isValid(id)) return res.status(400).send(`Id is not ${id}`);
+    if (!ObjectID.isValid(id)) return res.status(400).send(`${id} is not valid.`);
 
     const room = await getChatRoom(id);
-    console.log(room.members);
+
     room.members.push(body.member);
     room.room_size = room.members.length;
 
-    ChatRoom.findOneAndUpdate({ _id: id }, { $set: room }, { new: true }).then(doc => {
+    updateChatRoom(id, room).then(doc => {
         if (!doc) return res.status(400).send(`${id} Id is not valid.`);
         res.send(doc);
     }).catch(e => {
         res.status(404).send(e);
     });
 });
-//deleting a chat room
-app.delete('/chat-rooms/:id', (req, res) => {
+
+// updating a chat room member status
+app.patch('/chat-room-status/:id', async (req, res) => {
+    const body = _.pick(req.body, ['memberId', 'status']);
     const id = req.params.id;
 
-    if (!ObjectID.isValid(id)) return res.status(400).send(`Id is not ${id}`);
+    console.log(body);
 
-    ChatRoom.findOneAndRemove({ _id: id }).then(room => {
-        if (!room) return res.status(400).send(`${id} Id is not valid.`);
+    if (!ObjectID.isValid(id)) return res.status(400).send(`${id} is not valid.`);
 
-        res.send(room);
+    const room = await getChatRoom(id);
+
+    room.members = room.members.map(member => {
+        if (member.memberId === body.memberId) {
+            const updatedMember = member;
+            updatedMember.status = body.status;
+            return updatedMember;
+        }
+        return member;
+    });
+
+    updateChatRoom(id, room).then(doc => {
+        if (!doc) return res.status(400).send(`${id} Id is not valid.`);
+        res.send(doc);
+    }).catch(e => {
+        res.status(404).send(e);
+    });
+});
+
+//deleting a chat room
+app.delete('/chat-rooms/:id', async (req, res) => {
+    const id = req.params.id;
+    const body = _.pick(req.body, ['memberId']);
+
+    if (!ObjectID.isValid(id)) return res.status(400).send(`${id} is not valid.`);
+
+    const room = await getChatRoom(id);
+
+    room.members = room.members.filter(member => member.memberId !== body.memberId);
+    console.log(room.members);
+
+    updateChatRoom(id, room).then(doc => {
+        if (!doc) return res.status(400).send(`${id} Id is not valid.`);
+        res.send(doc);
     }).catch(e => {
         res.status(404).send(e);
     });

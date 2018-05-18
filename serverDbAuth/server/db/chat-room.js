@@ -13,10 +13,23 @@ const ChatRoom = mongoose.model('Chat-room', {
         required: true,
         trim: true
     },
-    members: {
-        type: Array,
-        required: true,
-    },
+    members: [{
+        memberName: {
+            type: String,
+            require: true,
+            trim: true,
+        },
+        memberId: {
+            type: String,
+            require: true,
+            trim: true,
+        },
+        status: {
+            type: Boolean,
+            require: true,
+            trim: true,
+        }
+    }],
     room_size: {
         default: 0,
         type: Number,

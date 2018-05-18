@@ -1,58 +1,117 @@
-.chat-sidebar{
+.chat-sidebar {
     height: 100vh;
     position: fixed;
     background-color: rgb(6, 55, 71);
     margin: 0;
-    color: white
+    color: white;
+    overflow-y: auto;
+    padding-top: 100px;
+    padding-bottom: 10px;
 }
-#users ol{
-    margin-top: 2rem;
+.chat-sidebar .sidebar-header {
+    position: fixed;
+    width: inherit;
+    background:  rgb(6, 55, 71);
+    color: white;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    box-shadow: 0 1px 10px 2px rgba(0, 0, 0, .6)
 }
-#users ol li{
-    border-radius: 8px;
-    padding: .9rem;
-    padding-left: 2rem;
-    font-size: 1.5rem;
-    font-weight: 450;
-    color: black;
-    margin: 1.4rem 0;
-    background-color: rgb(226, 226, 226);
+.scroll {
+    overflow-y: scroll;
+    z-index: 1;
 }
-
- ol{
-    list-style: none;
-    position: relative;
-    display: block;
-    overflow-wrap: break-word;
+.member{
+    margin: 1rem auto;
+    padding: .5rem 1rem;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .3)
 }
-.tittle{
+.wrap {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+#online::before {
+    content: "o ";
+    font-weight: 800;
+    color: rgb(8, 247, 8)
+}
+#offline::before {
+    content: "o ";
+    font-weight: 200;
+    color: rgb(121, 121, 121)
+}
+/*
+Title
+*/
+.tittle {
     margin: 0;
 }
-.tittle h4{
+.tittle h4 {
     margin-right: 10px;
 }
-.tittle p{
+.tittle p {
     line-height: wrap;
     margin-top: 3px;
     font-weight: bold;
     font-size: 1.1rem;
     opacity: .3;
 }
-.message{
-    margin-top: -15px;
+
+/* message text div */
+.message {
+    position: relative;
+    width: 100%;
 }
-.message p{
-    font-size: 1.2rem;
-    font-weight: 450
+.message p, small {
+    margin: 0;
+    position: relative;
+}
+.message small {
+    display: inline-block;
+}
+.message .time {
+    color: rgb(124, 123, 123);
+    margin-left: 5px;
+}
+.message .from {
+    font-weight: 900;
+    color: rgb(0, 0, 0);
+    font-size: 1rem;
+}
+/* ngClasses */
+.self-message, .group-message {
+    position: relative;
+    padding: 5px 10px;
+    border-radius: 23px;
+}
+.self-message {
+    left: 50%;
+    width: 50%;
+    padding-right: 30px;
+    text-align: right;
+    background-color: rgb(156, 233, 41);
+    margin-bottom: 10px;
+}
+.group-message {
+    left: 0%;
+    width: 60%;
+    padding-left: 30px;
+    text-align: left;
+    background-color: rgb(214, 214, 214);
+    margin-bottom: 25px;
+    margin-top: 10px;
 }
 
-.chat-main{
+/* main chat session */
+.chat-main {
     min-height: 100%;
     right: 0;
     position: absolute;
     background-color: rgba(235, 230, 230, 0.438);
 }
-.cont{
+.cont {
     min-height: 100vh;
     background-color: white;
     padding-bottom: 120px;
@@ -67,7 +126,7 @@
     right: 0;
     bottom: 0;
 }
-.contain{
+.contain {
     padding: 10px 0;
     background-color: rgba(204, 204, 204, 0.575);
 }
@@ -79,10 +138,11 @@ form {
     position: relative;
 }
 
-.chat-footer form .input{
+.chat-footer form .input {
     height: 100%;
     position: relative;
     top: 50%;
+    resize: none;
     transform: translateY(-50%);
 }
 .chat-footer form .button {
@@ -109,7 +169,7 @@ form {
     text-align: center;
     margin-block-end: 10px
 }
-.chat-footer .b:disabled{
+.chat-footer .b:disabled {
     background-color: rgba(56, 56, 56, 0.63);
 
 }

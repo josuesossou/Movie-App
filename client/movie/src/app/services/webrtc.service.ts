@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-declare let SimpleWebRTC: any; //this is important
+declare let SimpleWebRTC: any; // this is important
 
 @Injectable()
 export class WebrtcService {
 
-  webrtc: any; //declare global variable
+  webrtc: any; // declare global variable
 
-  constructor() { 
-
+  constructor() {
     this.webrtc = new SimpleWebRTC({
       url: 'http://localhost:3000',
       socketio: {},
@@ -19,16 +18,16 @@ export class WebrtcService {
       remoteVideosEl: 'remote-video',
       autoRequestMedia: true,
       adjustPeerVolume: true,
-      autoRemoveVideos:true,
+      autoRemoveVideos: true,
       media: {
-        video:{ width: 1280, height: 720 }, 
+        video: { width: 1280, height: 720 },
         audio: true
       }
     });
 
   }
 
-   //use webrtc functions as observables
+   // use webrtc functions as observables
    onError() {
     return new Observable<any>(observer => {
         this.webrtc.on('error', error => {
@@ -40,7 +39,7 @@ export class WebrtcService {
   onRoomReady() {
     return new Observable<any>(observer => {
       this.webrtc.connection.on('message', data => {
-        if(data.type == 'roomReady') {
+        if (data.type === 'roomReady') {
           observer.next(data.payload);
         }
       });
@@ -80,9 +79,9 @@ export class WebrtcService {
       });
   }
 
-  leaveRoom(room){
+  leaveRoom(room) {
     this.webrtc.leaveRoom(room);
-    this.webrtc.stopLocalVideo()
+    this.webrtc.stopLocalVideo();
   }
 
 }
