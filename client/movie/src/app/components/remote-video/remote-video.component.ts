@@ -1,26 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { WebrtcService } from '../../services/webrtc.service';
+import { Subscription } from 'rxjs/Subscription';
 // @ts-check
 @Component({
   selector: 'app-remote-video',
   templateUrl: './remote-video.component.html',
   styleUrls: ['./remote-video.component.css']
 })
-export class RemoteVideoComponent implements OnInit {
+export class RemoteVideoComponent implements OnInit, OnDestroy {
 
-  video:object;
+  private videoAddedSubscription: Subscription;
+  private videoRemovedSubscription: Subscription;
 
-  constructor(private webrtc: WebrtcService) { }
+  @ViewChild('remoteVid')
+  private remoteVid: ElementRef;
+
+  video: object;
+  videos: Object[] = [];
+  id;
+  isVideo = false;
+
+  constructor(
+    private webrtc: WebrtcService,
+    private renderer: Renderer2,
+  ) { }
+
 
   ngOnInit() {
-    this.webrtc.onVideoAdded().subscribe(data => {
-      console.log('data',data);
-      this.video = data.video.src;
+    this.videoAddedSubscription = this.webrtc.onVideoAdded().subscribe(data => {
+      console.log('video aded');
+      data.video.oncontextmenu = () => false;
+
+      this.renderer.appendChild(this.remoteVid.nativeElement, data.video);
     });
-    
-    this.webrtc.onReadyToCall('alo').subscribe((data) => {
-      // console.log('ready', data);
+
+    this.videoRemovedSubscription = this.webrtc.onVideoRemoved().subscribe(data => {
+      this.renderer.removeChild(this.remoteVid.nativeElement, data.video);
     });
   }
 
+  ngOnDestroy() {
+    this.videoAddedSubscription.unsubscribe();
+    this.videoRemovedSubscription.unsubscribe();
+  }
 }

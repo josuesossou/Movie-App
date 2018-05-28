@@ -1,0 +1,17 @@
+.card {
+    max-width: 40vw;
+    width: 40vw;
+    position: relative;
+    z-index: 500;
+}
+
+.card-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

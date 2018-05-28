@@ -1,11 +1,11 @@
 import { io } from '../config/server-config';
 import { generateGroupMessage, generateSelfMessage } from './utils/generateMessage';
+import { updateRoomMember } from './utils/disconnect';
 
 io.set('origins', 'http://localhost:4200:*');
 
 io.on('connection', (socket) => {
-    console.log('new user');
-
+    console.log('new user connection');
     /*************************** WORLD CHAT MESSAGE **********************/
     //listening to worldchatMessage
     socket.on('worldChatMessage', (message) => {
@@ -13,27 +13,50 @@ io.on('connection', (socket) => {
         io.emit('newWorldChatMessage', message);
     });
 
-    socket.on('joinRoom', (roomName) => {
-        socket.join(roomName);
+    socket.on('joinRoom', (joinRoomName) => {
+        socket.join(joinRoomName);
     });
 
     socket.on('groupMessage', (message) => {
-        console.log(message);
-
-        if (!message.isLeaveMessage) {
+        if (!message.isLeaveMessage && !message.isConnectedMessage && !message.newMember) {
             socket.emit('newGroupMessage', generateSelfMessage(message));
         }
+        
         socket.broadcast.to(message.joinedRoomName)
                         .emit('newGroupMessage', generateGroupMessage(message));
     });
 
-    // socket.on('joinedGroupMessage', (message) => {
-    //     console.log(message);
+    socket.on('leave', (message) => {
+        socket.leave(message.joinRoomName);
 
-    //     socket.broadcast.to(message.joinedRoomName)
-    //                     .emit('newGroupMessage', generateGroupMessage(message));
-    //     socket.emit('newGroupMessage', generateSelfMessage(message));
-    // });
+        socket.broadcast.to(message.joinedRoomName)
+                        .emit('newGroupMessage', generateGroupMessage(message));
+    });
+
+    socket.on('invitation', (message) => {
+        socket.broadcast.emit('newInvitation', message);
+    });
+
+    socket.on('disconnect', () => {
+        updateRoomMember(socket.id).then(res => {
+            if (!res) return;
+
+            if (res.userStatus) {
+                const message = {
+                    messageText: `${res.username} has disconnected`,
+                    isDisconectMessage: true,
+                };
+
+                socket.leave(res.joinRoomName);
+
+                socket.broadcast.to(res.joinRoomName)
+                                .emit('newGroupMessage', generateGroupMessage(message));
+            }
+            return res;
+        }).catch(() => {
+            console.log('error');
+        });
+    });
 });
 
 module.exports = { io };

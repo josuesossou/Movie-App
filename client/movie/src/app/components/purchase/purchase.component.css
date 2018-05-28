@@ -10,7 +10,10 @@ header{
     flex-wrap: wrap
 }
 .card-img{
-    box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2)
+    box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .row{

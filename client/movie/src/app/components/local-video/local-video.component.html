@@ -1,3 +1,4 @@
 <video id="local-video"></video>
-
+<button (click)="resumeLocalVid()" *ngIf="!on">Turn on Camera</button>
+<button (click)="pauseLocalVid()" *ngIf="on">Turn off Camera</button>
 

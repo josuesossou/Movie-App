@@ -1,3 +1,65 @@
-<p>
-  register works!
-</p>
+<div class="wrapper"> 
+  <div class="container text-center pt-5 pb-4">
+    <div class="card mx-auto col-12 col-md-6 col-lg-5" *ngIf="!loader">
+      <div class="card-block">
+        <h2 class="text-center mb-2 mt-3">Register</h2>
+        <form novalidate #f="ngForm" (ngSubmit)="onSubmit(f)" class="mb-4 text-left">
+          <!-- email -->
+          <div class="form-group">
+            <label for="uname">Username</label>
+            <input type="text" placeholder="Username must be unique"
+            [(ngModel)]="username" 
+            #unameId = "ngModel"
+            id="uname"
+            [ngClass]="{'is-invalid': unameId.errors?.required && unameId.touched}"
+            name="username" 
+            class="form-control"
+            required>
+            <div *ngIf = "unameId.errors?.required && unameId.touched" class="invalid-feedback">Username is required</div>
+          </div>
+
+          <!-- password -->
+          <div class="form-group">
+            <label for="pw">Password</label>
+            <input type="password" 
+            placeholder="Password" 
+            required 
+            id="pw"
+            [(ngModel)]="password" 
+            name="password"
+            #passwordId = "ngModel" 
+            [ngClass]="{'is-invalid': passwordId.errors?.required && passwordId.touched || passwordId.errors?.minlength}"
+            minlength="6" 
+            class="form-control">
+            <div *ngIf="passwordId.errors?.required && passwordId.touched" class="invalid-feedback"> Password is required</div>
+            <div *ngIf="passwordId.errors?.minlength && passwordId.touched" class="invalid-feedback"> Password must be at least 6 characters</div>
+          </div>
+
+          <!-- Re-type password -->
+          <div class="form-group">
+              <label for="repw">Re-type Password</label>
+              <input type="password" 
+              placeholder="Re-type Password" 
+              required 
+              id="repw"
+              [(ngModel)]="rePassword" 
+              name="rePassword"
+              #rePasswordId = "ngModel" 
+              [ngClass]="{'is-invalid': rePasswordId.errors?.required && rePasswordId.touched || passwordId.errors?.minlength}"
+              minlength="6" 
+              class="form-control">
+              <div *ngIf="rePasswordId.errors?.required && rePasswordId.touched" class="invalid-feedback"> Password is required</div>
+              <div *ngIf="rePasswordId.errors?.minlength && rePasswordId.touched" class="invalid-feedback"> Password must be at least 6 characters</div>
+            </div>
+          <button routerLink="/login" class="btn btn-link btn-sm">Already have an account? Login</button>
+          <input type="submit" class="btn btn-primary btn-block mt-3" value="Register">
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loader-container" *ngIf="loader">
+  <div class="loader"></div>
+</div>
+

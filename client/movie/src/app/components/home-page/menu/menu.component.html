@@ -1,9 +1,20 @@
-<div appDynamicHeight class="menu col-6 mx-auto d-none d-md-flex">
+<div appDynamicHeight class="menu col-8 mx-auto d-none d-md-flex">
 
   <div class="card" style="right: 70%;"></div>
   <div class="card" style="right: 55%;"></div>
   <div class="card" style="right: 40%;"></div>
   <div class="card" style="right: 25%"></div>
-  <div class="card" style="right: 10%;"></div>
-
+  <div class="card" style="right: 10%">
+    <div class="card-block" *ngIf="room">
+      <small class="text-center full-w mt-2 font-weight-bold">{{ room.roomNameShort }}</small>
+      <button appSquareAll class="mx-auto mt-3" (click)="enterRoom()">Enter</button>
+      <div class="btom pt-4">
+        <small class="ml-2">{{ room.creator_name }}</small>
+        <small class="mr-2 font-weight-bold">M {{ room.room_size }}</small>
+      </div>
+    </div>
+    <div class="card-block" *ngIf="!room">
+      <small class="text-center text font-weight-bold p-2">The room you Join will show up here</small>
+    </div>
+  </div>
 </div>

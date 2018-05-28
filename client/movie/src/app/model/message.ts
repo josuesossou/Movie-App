@@ -8,4 +8,13 @@ export interface Message {
     isJoinMessage?: boolean;
     isLeaveMessage?: boolean;
     isToGroup?: boolean;
+    class?: string;
+    isDisconectMessage?: boolean;
+    isConnectedMessage?: boolean;
+    newMember?: boolean;
+    classTwo?: string;
+    isLeave?: boolean;
+    socketId?: string;
+    movieId?: string;
+    recieverId?: string;
 }

@@ -36,12 +36,22 @@ import { SocketIoService } from './services/socket-io.service';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 
+// lib external classes
+import { ApiCalls } from './lib/api-calls';
+
+// guards
+import { AuthGuard } from './guards/auth.guard';
+import { SquareAllDirective } from './directive/square-all.directive';
+import { NotificationComponent } from './components/notification/notification.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'purchase/:videoId', component: PurchaseComponent},
-  {path: 'video', component: VideoPlayerComponent},
-  {path: 'chat-room/:room_name', component: ChatComponent},
+  {path: '', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'purchase/:videoId', component: PurchaseComponent, canActivate: [AuthGuard]},
+  {path: 'video/:vidId', component: VideoPlayerComponent, canActivate: [AuthGuard]},
+  {path: 'video/:vidId/:hostName', component: VideoPlayerComponent, canActivate: [AuthGuard]},
+  {path: 'chat-room/:room_name', component: ChatComponent, canActivate: [AuthGuard]},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
   {path: '**', component: NotFoundComponent}
 ];
 
@@ -70,7 +80,9 @@ const routes: Routes = [
     ChatComponent,
     TimeAgoPipe,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    SquareAllDirective,
+    NotificationComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +95,8 @@ const routes: Routes = [
   providers: [
     WebrtcService,
     SocketIoService,
+    ApiCalls,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

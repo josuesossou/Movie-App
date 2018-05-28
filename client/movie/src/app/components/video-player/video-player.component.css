@@ -60,7 +60,8 @@ app-remote-video, app-local-video{
     z-index: 4;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.2)
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.2);
+    overflow-y: hidden;
 }
 .chat-text, .invites{
     position: relative;
@@ -80,7 +81,6 @@ app-remote-video, app-local-video{
     padding-bottom: 3rem;
     padding-top: 1rem
 }
-
 .hide{
     transform: translateY(100%);
     transition: .4s ease;

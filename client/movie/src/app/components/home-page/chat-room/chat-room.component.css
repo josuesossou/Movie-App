@@ -5,8 +5,7 @@
 .cards{
     height: 100px;   
     border: 0px solid black;
-    padding: 0;
-    
+    padding: 0;   
 }
 .chat{
     position: relative;

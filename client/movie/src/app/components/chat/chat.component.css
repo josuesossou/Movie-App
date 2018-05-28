@@ -1,7 +1,7 @@
 .chat-sidebar {
     height: 100vh;
     position: fixed;
-    background-color: rgb(6, 55, 71);
+    background-color: rgba(6, 55, 71, 1);
     margin: 0;
     color: white;
     overflow-y: auto;
@@ -34,7 +34,7 @@
 }
 #online::before {
     content: "o ";
-    font-weight: 800;
+    font-weight: 200;
     color: rgb(8, 247, 8)
 }
 #offline::before {
@@ -77,7 +77,6 @@ Title
 }
 .message .from {
     font-weight: 900;
-    color: rgb(0, 0, 0);
     font-size: 1rem;
 }
 /* ngClasses */
@@ -91,7 +90,8 @@ Title
     width: 50%;
     padding-right: 30px;
     text-align: right;
-    background-color: rgb(156, 233, 41);
+    background-color: rgb(6, 55, 71, 1);
+    color: white;
     margin-bottom: 10px;
 }
 .group-message {
@@ -99,9 +99,18 @@ Title
     width: 60%;
     padding-left: 30px;
     text-align: left;
-    background-color: rgb(214, 214, 214);
+    background-color: rgba(214, 214, 214, 0.733);
     margin-bottom: 25px;
     margin-top: 10px;
+}
+.me {
+    font-size: 1rem;
+}
+.green-border {
+    border: 2px solid greenyellow;
+}
+.red-border {
+    border: 2px solid rgb(255, 36, 36);
 }
 
 /* main chat session */
@@ -127,6 +136,8 @@ Title
     bottom: 0;
 }
 .contain {
+    display: flex;
+    flex-wrap: wrap;
     padding: 10px 0;
     background-color: rgba(204, 204, 204, 0.575);
 }
@@ -134,7 +145,7 @@ Title
 form {
     height: 50px;
     width: 80%;
-    display: block;
+    display: flex;
     position: relative;
 }
 
@@ -148,28 +159,77 @@ form {
 .chat-footer form .button {
     height: 100%;
     top: 50%;
-    transform: translateY(-53%);
+    transform: translateY(-50%);
     position: relative;
-    background-color: rgb(6, 55, 71, 0.822);
+    background-color: rgb(6, 55, 71, 1);
     color: white;
-    border: 0px outset rgb(6, 55, 71, 0.822);
+    border: 0px outset rgb(6, 55, 71, 1);
     font-weight: bold;
     text-align: center;
     font-size: 1em;
+    cursor: pointer;
+    transition: .2s ease-in-out;
 }
 
 .chat-footer .b {
     height: 50px;
     position: relative;
-    background-color: rgba(6, 55, 71, 0.822);
+    background-color: rgba(6, 55, 71, 1);
     color: white;
     border: 0px solid white;
     font-size: 1em;
     font-weight: bold;
     text-align: center;
-    margin-block-end: 10px
+    margin-block-end: 10px;
+    cursor: pointer;
+    transition: .2s ease-in-out;
+}
+.chat-footer .b:hover,
+.chat-footer .b:focus,
+.chat-footer form .button:hover,
+.chat-footer form .button:focus {
+    outline: 0px;
+    box-shadow: 0 0 9px 1px rgba(6, 55, 71, 1);
+}
+.chat-footer .b:active, 
+.chat-footer form .button:active {
+    box-shadow: 0 0 0px 0px rgba(6, 55, 71, 1);
+
+    background-color: rgba(31, 87, 109, 0.959);
 }
 .chat-footer .b:disabled {
     background-color: rgba(56, 56, 56, 0.63);
+}
 
+.chat-sidebar .btn-dng {
+    position: fixed;
+    padding: .7rem;
+    bottom: 0.8rem;
+    box-shadow: 0 4px 9px 0px rgba(49, 23, 23, 0.445);
+    z-index: 10;
+    left: 1rem;
+}
+.btn-dng {
+    background-color: rgba(228, 34, 34, 0.966);
+    border: 0px;
+    cursor: pointer;
+    color: white;
+    transition: .4s ease-in-out;
+}
+.chat-sidebar .btn-dng:hover,
+.chat-sidebar .btn-dng:focus {
+    box-shadow: 0 0px 0px 0px rgba(0, 0, 0, 0.438);
+    outline: 0px;
+}
+.btn-dng:hover,
+.btn-dng:focus {
+    box-shadow: 0 0px 9px 1px rgba(87, 12, 12, 0.767);
+    outline: 0px;
+}
+.btn-dng:active {
+    background-color: rgba(255, 72, 72, 0.966);
+}
+
+.offset-1 {
+    margin-left: 2.6333333%;
 }

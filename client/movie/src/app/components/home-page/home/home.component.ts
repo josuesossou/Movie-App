@@ -11,18 +11,18 @@ export class HomeComponent implements OnInit {
 
   rooms: Room[];
   joinedRoom: Room[];
+  room: Room;
 
-  categories: string[] = [
-    'One',
-    'Two',
-    'Three'
-  ];
+  username;
+
+  categories: Object[];
 
   constructor(
     private socketIO: SocketIoService
   ) { }
 
   ngOnInit() {
+    this.socketIO.socketConnection();
     this.socketIO.getChatRooms().then((rooms: Room[]) => {
       this.rooms = rooms;
 
@@ -34,16 +34,32 @@ export class HomeComponent implements OnInit {
           return room.roomNameShort = room.room_name;
         }
       });
-      console.log(this.rooms);
 
       if (this.socketIO.userData.isJoinedRoom) {
         this.joinedRoom = this.rooms.filter(room => room._id === this.socketIO.userData.joinRoomName);
+
+        this.room = this.joinedRoom[0];
       }
-      console.log(this.joinedRoom);
+
+
+      this.username = this.socketIO.user.username;
     }).catch(e => {
       console.log(e);
     });
 
+    // set user status to false
+    if (this.socketIO.userData.isJoinedRoom) {
+      this.socketIO.updateRoomMemberStatus({
+        memberId: '',
+        status: false
+      }).then((res) => {
+      });
+    }
+
+    this.socketIO.getCategories().then((categories: Object[]) => {
+      console.log('categories', categories);
+      this.categories = categories;
+    }).catch();
   }
 
 }

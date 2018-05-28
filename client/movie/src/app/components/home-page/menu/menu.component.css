@@ -15,12 +15,59 @@
     position: absolute;
     width: 20%;
     border-radius: 7px;
-    border: 1px solid #97979794
+    border: 1px solid #97979794;
+    padding: 0;
 }
+
 .card:hover{
     width: 23%;
     height: 110%;
     border: solid 5px #51C7F3;
     transition: .3s ease;
 }
+.card-block {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 
+button {
+    position: absolute;
+    font-size: 0.5em;
+    border-radius: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 3rem;
+    box-shadow: 0 0 2px 0px rgba(0, 0, 0, .4);
+    z-index: 5;
+    font-weight: 800;
+    transition: .4s ease-in-out;
+}
+button:hover,
+button:focus {
+    outline: 0;
+    border: 2px outset rgba(255, 0, 0, 0.452);
+    color: rgba(255, 0, 0, 0.452);
+    box-shadow: 0 0 19px 1px rgba(226, 76, 76, 0.4);
+}
+.btom {
+    position: absolute;
+    display: flex;
+    bottom: .5rem;
+    width: 100%;
+    justify-content: space-between;
+    left: 0;
+}
+small {
+    position: relative;
+}
+.full-w {
+    width: 100%;
+    position: absolute;
+}
+
+.text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}

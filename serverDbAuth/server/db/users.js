@@ -1,21 +1,18 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 // import validator from 'validator';
 import _ from 'lodash';
+import { mongoose } from './mongoose';
 
-///Creating a user schema
+// Creating a user schema
 const UserSchema = new mongoose.Schema({
-    user_name: {
+    username: {
         type: String,
         trim: true,
         require: true,
         minlength: 1,
         unique: true,
-        // validate: {
-        //     validator: validator.isEmail,
-        //     message: '{VALUE} is not a valid email'
-        // }
     },
     password: {
         type: String,
@@ -40,7 +37,7 @@ UserSchema.methods.toJSON = function () {
     const user = this;
     const userObject = user.toObject();
 
-    return _.pick(userObject, ['_id', 'user_name']);
+    return _.pick(userObject, ['_id', 'username']);
 };
 
 /* eslint-disable no-underscore-dangle*/
@@ -53,7 +50,7 @@ UserSchema.methods.generateAuthToken = function () {
 
     user.tokens.push({ access, token });
 
-    return user.save().then(() => token);
+    return user.save().then(() => token).catch(e => e);
 };
 
 ///finding a token and removing it from the tokens object of the particular user's object
@@ -72,7 +69,6 @@ UserSchema.methods.removeToken = function (token) {
 UserSchema.statics.findByToken = function (token) {
     const User = this;
     let decode;
-             
     try {
         decode = jwt.verify(token, 'secret');
     } catch (e) {
@@ -89,17 +85,17 @@ UserSchema.statics.findByToken = function (token) {
 UserSchema.statics.findByCredential = function (userName, password) {
     const User = this;
 
-    return User.findOne({ user_name: userName }).then(user => {
-        if (!user) return Promise.reject('second err');
+    return User.findOne({ username: userName }).then(user => {
+        if (!user) return Promise.reject('User does not exist');
 
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user.password, (err, res) => {
-                if (err) return reject('second err');
+                if (err) return reject('Password is incorrect');
 
                 if (res === true) {
                     resolve(user);
                 } else {
-                    reject('third err');
+                    reject('Password is incorrect');
                 }
             });
         });

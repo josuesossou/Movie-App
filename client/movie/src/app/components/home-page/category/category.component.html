@@ -1,11 +1,13 @@
-<div class="category mt-5 col-11 mx-auto text-center">
-  <div class="row col-10 col-sm-9 col-lg-10 mx-auto mt-3 ">
-    <div class="card col-6 col-sm-4 col-lg-4 mr-3"  *ngFor="let d of data" (click)="purchase(d)">
-      <div class="bgImg"></div>
+<div class="category mt-5 col-12 mx-auto text-center">
+  <div class="row col-11 mx-auto mt-3">
+    <div>&nbsp;</div>
+    <div class="card col-5 col-sm-4 col-lg-3"  *ngFor="let movie of movies" (click)="purchase(movie)">
+      <div class="bgImg" [style.backgroundImage]= "movie.url_thumbnail"></div>
       <div class="card-body">
-        <p class="card-text">Hello</p>
+        <p class="card-text">{{ movie.title }}</p>
       </div>
     </div>
+    <div>&nbsp;</div>
   </div>    
   <div class="text mt-1">
     <ng-content></ng-content>

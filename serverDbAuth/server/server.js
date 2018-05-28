@@ -2,9 +2,10 @@ import cors from 'cors';
 import { ObjectID } from 'mongodb';
 import bodyParser from 'body-parser';
 import * as _ from 'lodash';
-import { app } from './config/server-config';
+import { app, server } from './config/server-config';
 
 //db imports
+import { Category } from './db/categories';
 import { Movie } from './db/movie';
 import { ChatRoom } from './db/chat-room';
 import { UsersData } from './db/users_data';
@@ -15,21 +16,31 @@ import { getChatRoom, updateChatRoom } from './lib/chat-room';
 
 /*** MIDDLEWARE imports ****/
 import { authenticate } from './middleware/authenticate';
-
+/* eslint-disable no-underscore-dangle, no-unused-vars*/
 import { io } from './socketIO/socketIO';
+/* eslint-enable no-unused-vars*/
 
-
-io.listen(3001);
 const port = 3000;
 
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//     next();
-//   });
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 
+     'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Expose-Headers', 'x-auth');
+    next();
+});
+
 app.use(cors());
 app.use(bodyParser.json());
-/* eslint-disable no-underscore-dangle*/
+/************ Categories *****************/
+app.get('/categories', (req, res) => {
+    Category.find().then(movies => {
+        res.send(movies);
+    }).catch(e => {
+        res.status(400).send(e); 
+    });
+});
+
 /************ Movie routes ***************/
 app.get('/movies', (req, res) => {
     Movie.find().then(movies => {
@@ -39,11 +50,41 @@ app.get('/movies', (req, res) => {
     });
 });
 
+app.get('/movies/:id', (req, res) => {
+    const id = req.params.id;
+
+    Movie.findById(id).then(movies => {
+        res.send(movies);
+    }).catch(e => {
+        res.status(400).send(e); 
+    });
+});
+
+app.post('/querymovies', (req, res) => {
+    const body = _.pick(req.body, ['category']);
+
+    Movie.find({ category: body.category }).then(movies => {
+        res.send(movies);
+    }).catch(e => {
+        res.status(400).send(e); 
+    });
+});
+
+app.post('/movies', (req, res) => {
+    const body = _.pick(req.body, ['url_video', 'url_thumbnail', 'title', 'price', 'category']);
+    const movie = new Movie(body);
+
+    movie.save().then(movies => {
+        res.send(movies);
+    }).catch(e => {
+        res.status(400).send(e); 
+    });
+});
 /*************Chat Rooms routes **************/
 //creating a chat room
 app.post('/chat-rooms', authenticate, (req, res) => {
     const body = _.pick(req.body, ['room_name']);
-    body.creator_name = req.user.user_name;
+    body.creator_name = req.user.username;
     body.members = [];
 
     const chatRoom = new ChatRoom(body);
@@ -99,8 +140,6 @@ app.patch('/chat-room-status/:id', async (req, res) => {
     const body = _.pick(req.body, ['memberId', 'status']);
     const id = req.params.id;
 
-    console.log(body);
-
     if (!ObjectID.isValid(id)) return res.status(400).send(`${id} is not valid.`);
 
     const room = await getChatRoom(id);
@@ -132,7 +171,7 @@ app.delete('/chat-rooms/:id', async (req, res) => {
     const room = await getChatRoom(id);
 
     room.members = room.members.filter(member => member.memberId !== body.memberId);
-    console.log(room.members);
+    room.room_size = room.members.length;
 
     updateChatRoom(id, room).then(doc => {
         if (!doc) return res.status(400).send(`${id} Id is not valid.`);
@@ -145,15 +184,22 @@ app.delete('/chat-rooms/:id', async (req, res) => {
 /************* Connected users collections *****************/
 //getting all users data, to find on/off users
 app.get('/users-data', (req, res) => {
-    UsersData.find().then(activeUsers => {
-        res.send(activeUsers);
+    UsersData.find().then(users => {
+        const usersObject = users.map(room => {
+            const userObject = room.toObject();
+            return _.pick(userObject, ['user_id', 'socketId', 'username']);
+        });
+        res.send(usersObject);
     }).catch(e => {
         res.status(400).send(e);
     });
 });
 //getting a single user
-app.get('/users-data/user', authenticate, (req, res) => {
-    UsersData.find().then(userData => {
+app.get('/users-data/:id', authenticate, (req, res) => {
+    const id = req.params.id; 
+
+    UsersData.findOne({ user_id: id }).then(userData => {
+        if (!userData) return res.status(404).send('unable to find userData');
         res.send(userData);
     }).catch(e => {
         res.status(400).send(e);
@@ -161,23 +207,24 @@ app.get('/users-data/user', authenticate, (req, res) => {
 });
 //adding a user's data
 app.post('/users-data', authenticate, (req, res) => {
-    console.log(req.body);
     const body = _.pick(req.body, []);
     body.user_id = req.user._id;
+    body.username = req.user.username;
+    body.status = true;
 
     const usersData = new UsersData(body);
     
     usersData.save().then(data => {
         res.send(data);
     }).catch(e => {
-        res.statust(400).send(e);
+        res.status(400).send(e);
     });
 });
 //updating a user's data
-    /*
-    note: user_id for user data corresponds to the authenticated user's 
-    _id property
-    */
+/*
+note: user_id for user data corresponds to the authenticated user's 
+_id property
+*/
 app.patch('/users-data/user', authenticate, (req, res) => {
     const body = _.pick(req.body, [
         'isJoinedRoom',
@@ -186,7 +233,8 @@ app.patch('/users-data/user', authenticate, (req, res) => {
         'isRoomCreator',
         'movies',
         'movie_room',
-        'socket_id'
+        'socketId',
+        'status',
     ]);
 
     UsersData.findOneAndUpdate({ user_id: req.user._id },
@@ -198,46 +246,54 @@ app.patch('/users-data/user', authenticate, (req, res) => {
     });
 });
 
-//removing a disconnected user
-// app.delete('/users-data', (req, res) => {
-//     const id = req.body.user_id;
-
-//     UsersData.findManyAndRemove({ user_id: id }).then(user => {
-//         if (!user) return res.status(400).send('User does not exist');
-
-//         res.send(user);
-//     }).catch(e => {
-//         res.status(400).send(e);
-//     });
-// });
-
 /******************* Users authentication Routes *******************/
 ///register route
 app.post('/register', (req, res) => {
-    const body = _.pick(req.body, ['user_name', 'password']);
+    const body = _.pick(req.body, ['username', 'password']);
     const user = new User(body);
 
-    if (!req.body.user_name || !req.body.password) {
+    if (!req.body.username || !req.body.password) {
         return res.status(404)
-                .send('Provide an user name and password');
+                .send('Provide a username and password');
     }
 
     user.save().then(() => user.generateAuthToken())
     .then(token => { 
         res.header('x-auth', token).send(user);
     }).catch(e => {
-        res.status(400).send(e);
+        if (e.code === 11000) return res.status(400).send('Username already taken');
+        res.status(400).send('Unable to register');
+    });
+});
+
+app.post('/reset-password', (req, res) => {
+    const body = _.pick(req.body, ['username', 'password']);
+    const user = new User(body);
+
+    if (!req.body.username || !req.body.password) {
+        return res.status(404)
+                .send('Provide a username and password');
+    }
+
+    User.findOneAndRemove({ username: body.username }).then(() => {
+        user.save().then(() => user.generateAuthToken())
+        .then(token => { 
+            res.header('x-auth', token).send(user);
+        }).catch(e => {
+            res.status(400).send(e);
+        });
     });
 });
 
 //login user route
 app.post('/login', (req, res) => {
-    const body = _.pick(req.body, ['user_name', 'password']);
-    User.findByCredential(body.user_name, body.password).then(async (user) => {
+    const body = _.pick(req.body, ['username', 'password']);
+
+    User.findByCredential(body.username, body.password).then(async (user) => {
         const token = await user.generateAuthToken();
         res.header('x-auth', token).send(user);     
     }).catch(e => {
-        res.status(400).send(e.message);
+        res.status(400).send(e);
     });
 });
 
@@ -246,7 +302,7 @@ app.delete('/logout', authenticate, (req, res) => {
     req.user.removeToken(req.token).then((() => {
         res.status(200).send('successfully Logged out');
     })).catch(e => {
-        res.status(400).send(e.message);
+        res.status(400).send(e);
     });
 });
 
@@ -255,6 +311,6 @@ app.get('/user', authenticate, (req, res) => {
     res.send(req.user);
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

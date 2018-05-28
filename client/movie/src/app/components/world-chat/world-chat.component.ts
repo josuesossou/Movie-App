@@ -33,7 +33,7 @@ export class WorldChatComponent implements OnInit {
         console.log(message);
       });
       this.joinedWC = true;
-    } else {
+    } else if (this.joinedWC) {
       this.needChat = !this.needChat;
     }
   }

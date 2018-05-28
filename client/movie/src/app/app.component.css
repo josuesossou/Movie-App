@@ -3,5 +3,11 @@ flash-messages {
     top: 10vh;
     z-index: 50;
     left: 50%;
-    transform: translateX(-50%)
+    transform: translateX(-50%);
+}
+app-notification {
+    position: fixed;
+    right: 1rem;
+    top: .5rem;
+    z-index: 100;
 }

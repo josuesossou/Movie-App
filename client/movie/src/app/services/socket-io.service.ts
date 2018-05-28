@@ -2,19 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as io from 'socket.io-client';
 import { Observable } from 'rxjs/Observable';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 import { Message } from '../model/message';
 import { User, UserData } from '../model/user';
 import { Room } from '../model/chat-rooms';
+import { ApiCalls } from '../lib/api-calls';
 
-const headerOptions = {
-  body: null,
-
-  headers: new HttpHeaders({
-    'x-auth': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWY2OWQzYTFjNmNiMDNkOGY0MmExMTkiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTI2MTExNzkyfQ.yVOQFKcNXcvTH-54w42CaE-MouoUev5OBf9hDtVecF8',
-    'Content-Type': 'application/json'
-  })
-};
+// path to user dat endpoint
+const userDataUrl = 'http://localhost:3000/users-data/user';
 
 @Injectable()
 export class SocketIoService {
@@ -22,36 +18,59 @@ export class SocketIoService {
   socket;
   user: User;
   userData: UserData;
+  isInChat = false;
 
-  constructor( private http: HttpClient) {
-    // connection to the server
-    this.socket = io('http://localhost:3001');
+  constructor(
+    private api: ApiCalls,
+    private flashMessage: FlashMessagesService,
+  ) {}
 
-    // connect event
-    this.socket.on('connect', () => {
-      console.log('connect');
-      if (this.userData && this.userData.isJoinedRoom) {
-        this.emitJoinRoom(this.userData.joinRoomName);
-      }
-    });
+  // setting socket connect and disconect connection
+  socketConnection() {
+    this.socket = io('http://localhost:3000');
+
+    if (this.user && this.userData) {
+      this.socket.on('connect', () => {
+        const data: any = {
+          socketId: this.socket.id,
+        };
+
+        this.api.sendApiReq(data, userDataUrl, 'patch');
+
+        if (this.userData.isJoinedRoom && this.isInChat) {
+          this.emitJoinRoom();
+
+          this.updateRoomMemberStatus({ status: true });
+
+          const message: Message = {
+            messageText: '',
+            isJoinMessage: false,
+            isLeaveMessage: false,
+            isConnectedMessage: true,
+          };
+
+          this.sendMessage('groupMessage', message);
+        }
+
+        this.api.sendApiReq(data, userDataUrl, 'patch');
+      });
+
+      this.socket.on('disconnect', () => {
+        this.generateFlashMessage('You have been disconnected', 'alert-danger', 5000);
+      });
+    }
   }
 
-  sendApiReq(data, url, method) {
-    if (data) {
-      headerOptions.body = data;
-    }
+  closeSocket() {
+    this.socket.disconnect();
+  }
 
-    return this.http.request(
-      method,
-      url,
-      headerOptions,
-    ).toPromise().then(response => {
-      if (!response) {
-        return Promise.reject('no response');
+  authState() {
+    return new Observable<boolean>(observer => {
+      if (!this.user || !this.userData) {
+        return observer.next(false);
       }
-      return Promise.resolve(response);
-    }).catch(e => {
-      return Promise.reject(e);
+      observer.next(true);
     });
   }
 
@@ -61,16 +80,19 @@ export class SocketIoService {
     switch (eventName) {
       case 'groupMessage':
       case 'joinedGroupMessage':
-      message.senderName = 'Josue';
+      message.senderName = this.user.username;
       message.senderId = this.userData.user_id;
       message.joinedRoomName = this.userData.joinRoomName;
       message.roomName = this.userData.room_name;
       break;
+
+      case 'leave':
+      message.senderName = this.user.username;
+      message.senderId = this.userData.user_id;
+      break;
     }
 
-    this.socket.emit(eventName, message, err => {
-      console.log(err);
-    });
+    this.socket.emit(eventName, message, err => {});
   }
 
   // receiving world chat message
@@ -83,8 +105,8 @@ export class SocketIoService {
   }
 
   // function that join a user to a room
-  emitJoinRoom(name) {
-    this.socket.emit('joinRoom', name, err => {
+  emitJoinRoom() {
+    this.socket.emit('joinRoom', this.userData.joinRoomName, err => {
       Promise.reject(err);
     });
   }
@@ -92,7 +114,7 @@ export class SocketIoService {
   async updateChatRoom(chatRoomSendData, method: string) {
     const roomUrl = `http://localhost:3000/chat-rooms/${this.userData.joinRoomName}`;
 
-    const chatRoomUpdateData = await this.sendApiReq(chatRoomSendData, roomUrl, method);
+    const chatRoomUpdateData = await this.api.sendApiReq(chatRoomSendData, roomUrl, method);
     return chatRoomUpdateData;
   }
 
@@ -102,16 +124,16 @@ export class SocketIoService {
 
     const url = `http://localhost:3000/chat-room-status/${this.userData.joinRoomName}`;
 
-    const chatRoomUpdateData = await this.sendApiReq(data, url, 'patch');
+    const chatRoomUpdateData = await this.api.sendApiReq(data, url, 'patch');
 
     return chatRoomUpdateData;
   }
 
   // join a room
   async joinRoom(data, name: string) {
-    const userDataUrl = 'http://localhost:3000/users-data/user';
+    data.socketId = this.socket.id;
 
-    const userData: any = await this.sendApiReq(data, userDataUrl, 'patch');
+    const userData: any = await this.api.sendApiReq(data, userDataUrl, 'patch');
 
     if (!userData) {
       return Promise.reject('Unable to update UserData');
@@ -120,25 +142,30 @@ export class SocketIoService {
 
     const chatRoomSendData = {
       member: {
-        memberName: 'New Josue',
+        memberName: this.user.username,
         memberId: this.userData.user_id,
         status: true,
       }
     };
 
     this.updateChatRoom(chatRoomSendData, 'patch').then(room => {
-      console.log('chatroomdata', room);
-    });
+      const message: Message = {
+        messageText: '',
+        newMember: true,
+        isJoinMessage: false,
+        isLeaveMessage: false,
+        isConnectedMessage: false,
+      };
 
-    this.emitJoinRoom(name);
-    console.log('userData', userData);
+      this.sendMessage('groupMessage', message);
+    });
   }
 
   // create a room
   createRoom(data, chatRoomData) {
     const url = 'http://localhost:3000/chat-rooms';
 
-    return this.sendApiReq(chatRoomData, url, 'post').then((res: Room) => {
+    return this.api.sendApiReq(chatRoomData, url, 'post').then((res: Room) => {
       if (!res) {
         return Promise.reject('Unable to create room');
       }
@@ -153,22 +180,19 @@ export class SocketIoService {
   }
 
   // leaving a room permanantly
-  async leaveRoom(data) {
-    const userDataUrl = 'http://localhost:3000/users-data/user';
-
-    const userData: any = await this.sendApiReq(data, userDataUrl, 'patch');
-
-    if (!userData) {
-      return Promise.reject('Unable to update UserData');
-    }
-
-    this.userData = userData;
+  leaveRoom(data) {
+    data.socketId = '';
 
     const chatRoomSendData = {
       memberId: this.userData.user_id
     };
-    this.updateChatRoom(chatRoomSendData, 'delete').then(room => {
-      console.log('chatroomdata', room);
+
+    return this.updateChatRoom(chatRoomSendData, 'delete').then(room => {
+      return this.api.sendApiReq(data, userDataUrl, 'patch').then((userData: UserData) => {
+        this.userData = userData;
+      });
+    }).catch(err => {
+      return Promise.reject(err);
     });
   }
 
@@ -176,7 +200,7 @@ export class SocketIoService {
   getChatRooms() {
     const url = 'http://localhost:3000/chat-rooms';
 
-    return this.sendApiReq(null, url, 'get').then(rooms => {
+    return this.api.sendApiReq(null, url, 'get').then(rooms => {
       if (!rooms) {
         return Promise.reject('no room was found');
       }
@@ -193,7 +217,7 @@ export class SocketIoService {
     const id = this.userData.joinRoomName;
     const url = `http://localhost:3000/chat-rooms/${id}`;
 
-    return this.sendApiReq(null, url, 'get').then(room => {
+    return this.api.sendApiReq(null, url, 'get').then(room => {
       if (!room) {
         return Promise.reject('Could not get room');
       }
@@ -201,7 +225,33 @@ export class SocketIoService {
     });
   }
 
+  getUserData() {
+    const url = `http://localhost:3000/users-data`;
+    return this.api.sendApiReq(null, url, 'get');
+  }
+
+  getCategories() {
+    const url = `http://localhost:3000/categories`;
+    return this.api.sendApiReq(null, url, 'get');
+  }
+
+  getQuerriedMovies(category) {
+    const url = `http://localhost:3000/querymovies`;
+    return this.api.sendApiReq({ category }, url, 'post');
+  }
+
+  getOneMovie(id) {
+    const url = `http://localhost:3000/movies/${id}`;
+    return this.api.sendApiReq(null, url, 'get');
+  }
+
   removeSocketEvent(eventName: string) {
     this.socket.off(eventName);
   }
+
+  // generating flash messages
+  generateFlashMessage(text: string, cssclass: string, time: number) {
+    this.flashMessage.show(text, { cssClass: cssclass, timeout: time });
+  }
+
 }

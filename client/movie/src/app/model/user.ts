@@ -1,6 +1,6 @@
 export interface User {
-    id?: string;
-    user_name?: string;
+    _id?: string;
+    username?: string;
 }
 export interface UserData {
     _id?: string;
@@ -10,4 +10,6 @@ export interface UserData {
     joinRoomName?: string;
     isRoomCreator: boolean;
     movies: string[];
+    socketId: string;
+    username?: string;
 }

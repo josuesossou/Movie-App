@@ -12,4 +12,6 @@ export interface Member {
     memberId?: string;
     memberName?: string;
     status?: boolean;
+    me?: boolean;
+    timeJoined?: number;
 }

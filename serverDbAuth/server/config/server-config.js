@@ -7,6 +7,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 module.exports = {
+    server,
     app,
     io, 
     http

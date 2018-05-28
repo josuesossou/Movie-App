@@ -1,0 +1,8 @@
+<div class="card p-3" *ngIf="notification">
+  <div class="card-block mt-2 mb-1" *ngFor="let invitation of invitations">
+    <small>{{invitation.senderName}} has invite you to watch a movie</small>
+    <button class="btn btn-success" (click)="joinRoom(invitation)">Join</button>
+    <button class="btn btn-danger">Cancel</button>
+  </div>
+  <button class="close" (click)="close()">X</button>
+</div>

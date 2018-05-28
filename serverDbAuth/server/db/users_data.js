@@ -5,45 +5,57 @@ const UsersData = mongoose.model('Users_Data', {
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        trim: true
+        trim: true,
+    },
+    username: {
+        type: String,
+        trim: true,
+        require: true,
+        minlength: 1,
+        unique: true,
     },
     joinRoomName: {
         type: String,
         required: false,
-        trim: true
+        trim: true,
     },
-    socket_id: {
+    socketId: {
         type: String,
         required: false,
-        trim: true
+        trim: true,
     },
     isJoinedRoom: {
         default: false,
         type: Boolean,
         required: true,
-        trim: true
+        trim: true,
     },
     room_name: {
         type: String,
         required: false,
-        trim: true
+        trim: true,
     },
     isRoomCreator: {
         type: Boolean,
         required: false,
-        trim: true
+        trim: true,
     },
     movies: [{
         movie_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: false,
-            trim: true
+            trim: true,
         }
     }],
     movie_room: {
         type: String,
         required: false,
-        trim: true
+        trim: true,
+    },
+    status: {
+        type: Boolean,
+        trim: true,
+        required: true,
     }
 });
 

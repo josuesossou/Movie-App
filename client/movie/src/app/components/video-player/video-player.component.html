@@ -1,52 +1,32 @@
-<div class="noverflow">
-<div class="video-player pt-3">
-  <div appVideoWidth class="player mx-auto col-11 col-md-8">
-    <video>
-      <source>
-    </video>
-  </div>
-  <div class="live-videos p-1 pl-2" [ngClass]="{hide:needLive}">
-    <div class="local mr-auto" appLiveVideo><app-local-video></app-local-video></div>
-    <div class="remote" appLiveVideo><app-remote-video></app-remote-video></div>
-  </div>
-  <div class="buttons">
-    <button class="btn btn-light btn-sm m-1" (click)="needLive=!needLive">Live</button>
-    <button class="btn btn-light btn-sm m-1" (click)="show('needChat')">Chat</button>
-    <button class="btn btn-light btn-sm m-1" (click)="home()">Home</button>
-    <button class="btn btn-light btn-sm m-1" *ngIf="!isInvited" (click)="show('needInvite')">Invite</button>
-    <button class="btn btn-light btn-sm m-1" *ngIf="isInvited">Leave</button>
-  </div>
-  <div class="chat" *ngIf="needChat">
-    <div class="chat-text col-12">
-      <div class="texts">
-          <p>dsfadfadsfdf</p>
-          <p>dsfadfadsfdf</p>
+<div class="noverflow" *ngIf="isLoaded">
+  <div class="video-player pt-3">
+    <div appVideoWidth class="player mx-auto col-11 col-md-10">
+      <video controls [poster]="movie.url_thumbnail">
+        <source [src]="movie.url_video" >
+        Your browser does not support the video tag. 
+      </video>
+    </div>
+    
+
+    <div class="live-videos p-1 pl-2" [ngClass]="{hide:needLive}" *ngIf="isInGroup">
+      <div class="local mr-auto" appLiveVideo><app-local-video></app-local-video></div>
+      <div class="remote" appLiveVideo><app-remote-video></app-remote-video></div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-light btn-sm m-1" (click)="needLive=!needLive" *ngIf="isInGroup">Live</button>
+      <button class="btn btn-light btn-sm m-1" (click)="home()">Home</button>
+      <button class="btn btn-light btn-sm m-1" *ngIf="isEnable && !isInvited" (click)="getUserData()">Invite</button>
+      <button class="btn btn-light btn-sm m-1" *ngIf="!isEnable" (click)="enableGroupLive()">Enable Group Live</button>
+      <!-- <button class="btn btn-light btn-sm m-1" *ngIf="!isEnable" (click)="isInGroup = true">Enable</button> -->
+      <button class="btn btn-light btn-sm m-1" *ngIf="isInvited">Leave</button>
+    </div>
+
+    <div class="invite" *ngIf="needInvite">
+      <h4>Active Members</h4> <small (click)="needInvite = false">X</small>
+      <div class="invites text-center">
+        <button class="mt-3 col-10" *ngFor="let user of activeUsers" (click)="sendInvitation(user)">{{ user.username }}</button>
       </div>
     </div>
-    <div class="send-text col-12">
-      <input type="text" class="form-control col-8 mx-auto">
-      <button class="btn btn-primary btn-sm mx-auto">Send</button>
-    </div>
   </div>
-  <div class="invite" *ngIf="needInvite">
-    <div class="invites">
-        <div class="texts">
-            <p>dsfadfadsfdf</p>
-            <p>dsfadfadsfdf</p>
-
-            <p>dsfadfadsfdf</p>
-            <p>dsfadfadsfdf</p>
-
-            <p>dsfadfadsfdf</p>
-            <p>dsfadfadsfdf</p>
-
-            <p>dsfadfadsfdf</p>
-            <p>dsfadfadsfdf</p>
-        </div>
-    </div>
-    <div class="send-invite col-12">
-      <button class="btn btn-primary btn-block mx-auto">Send</button>
-    </div>
-  </div>
-</div>
 </div>

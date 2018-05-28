@@ -2,3 +2,9 @@
     position: relative;
     margin-top: 70px
 }
+small {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    z-index: 5;
+}

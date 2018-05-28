@@ -1,13 +1,14 @@
 <div class="home">
   <app-navbar></app-navbar>
   <app-slideshow></app-slideshow>
+  <small>{{ username }}</small>
   <div class="container mt-5">
-    <app-menu [joinedRoom]="joinedRoom"></app-menu>
+    <app-menu [room]="room"></app-menu>
   </div>
-  <div class="container  mb-5 c">
+  <div class="mb-5 c">
     <div *ngFor="let category of categories">
-      <app-category [da]="category">
-        {{ category }}
+      <app-category [genre]="category">
+        {{ category.category }}
       </app-category>
     </div>
   </div>

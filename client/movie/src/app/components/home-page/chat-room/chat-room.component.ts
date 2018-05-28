@@ -26,31 +26,40 @@ export class ChatRoomComponent implements OnInit {
   }
 
   joinRoom(name, id) {
-    if (!this.socketIO.userData) {
-      confirm(`Do you want to join ${name}? You will automatically be removed from any currently joined room.`);
-      const data = {
-        joinRoomName: id,
-        room_name: name,
-        isJoinedRoom: true,
-        isRoomCreator: false
-      };
-
-      this.socketIO.joinRoom(data, id).then(res => {
-        this.flashMessage.show(`You have successfully Joined ${name}`, { cssClass: 'alert-success', timeout: 3000 });
-        this.router.navigate([`chat-room/${name}`]);
-      }).catch(e => {
-        this.flashMessage.show(e, { cssClass: 'alert-danger', timeout: 3000 });
-      });
+    if (!this.socketIO.userData.isJoinedRoom) {
+      if (confirm(`Do you want to join ${name}?`)) {
+        this.joiningRoom(name, id);
+      }
     } else {
-      const data = {
-        joinRoomName: '',
-        room_name: '',
-        isJoinedRoom: false,
-        isRoomCreator: false
-      };
+      if (confirm(`Do you want to join ${name}? You will automatically be removed from any currently joined room.`)) {
+        const data = {
+          joinRoomName: '',
+          room_name: '',
+          isJoinedRoom: false,
+          isRoomCreator: false
+        };
 
-      this.socketIO.leaveRoom(data);
+        this.socketIO.leaveRoom(data).then(doc => {
+          this.joiningRoom(name, id);
+        });
+      }
     }
+  }
+
+  joiningRoom(name, id) {
+    const data = {
+      joinRoomName: id,
+      room_name: name,
+      isJoinedRoom: true,
+      isRoomCreator: false
+    };
+
+    this.socketIO.joinRoom(data, id).then(res => {
+      this.flashMessage.show(`You have successfully Joined ${name}`, { cssClass: 'alert-success', timeout: 3000 });
+      this.router.navigate([`chat-room/${name}`]);
+    }).catch(e => {
+      this.flashMessage.show(e, { cssClass: 'alert-danger', timeout: 3000 });
+    });
   }
 
   createRoom() {

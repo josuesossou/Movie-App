@@ -1,5 +1,4 @@
 <div class="chat-layout">
-
     <div class="chat-sidebar d-none d-md-block col-3">
         <div class="sidebar-header col-3 pt-3">
             <h3 class="" *ngIf="chatRoom">{{ chatRoom.room_size }} Members</h3>
@@ -8,24 +7,25 @@
                 <small *ngIf="chatRoom">Admin: {{ chatRoom.creator_name | uppercase}}</small>
             </div>
         </div>
-        <div class="scroll" *ngIf="chatRoom">
+        <div class="scroll mb-5" *ngIf="chatRoom">
             <div class="member" *ngFor="let member of chatRoom.members">
                 <div class="wrap">
-                    <small>{{member.memberName}}</small>
+                    <small>{{member.memberName}}<small class="me ml-1" *ngIf="member.me">✪</small></small>
                     <small *ngIf="!member.status" id="offline">Offline</small>
                     <small *ngIf="member.status" id="online">Online</small>
                 </div>
-                <small>Joined on 12/3/4 4:30</small>
+                <small>Joined on {{ member.timeJoined | amLocal | amDateFormat: 'YYYY-MM-DD HH:mm' }}</small>
             </div>
         </div>
+        <button class="button btn-dng col-3 col-md-2 offset-1" (click)="leaveRoom()">Leave Room</button>
     </div>
 
     <div class="chat-main col-12 col-md-9">
         <div class="container cont pt-5 pl-5">
             <div *ngFor="let message of messages" class="message">
                 <div [ngClass]="message.class">
-                    <small class="from" *ngIf="message.isToGroup && !message.isJoinMessage && !message.isLeaveMessage">{{ message.senderName }}</small>
-                    <small class="from" *ngIf="message.isJoinMessage || message.isLeaveMessage">Admin</small>
+                    <small class="from" *ngIf="message.isToGroup && !message.isJoinMessage && !message.isLeaveMessage && !message.isConnectedMessage && !message.isLeave">{{ message.senderName }}</small>
+                    <small class="from" *ngIf="message.isJoinMessage || message.isLeaveMessage || message.isDisconectMessage || message.isConnectedMessage || message.isLeave">Admin</small>
                     <small class="time" *ngIf="message.isToGroup || !message.isJoinMessage">{{ message.timeStamp | amTimeAgo: m }}</small>
                     <p >{{ message.messageText }}</p>
                 </div>
@@ -34,18 +34,19 @@
     </div>
     <div class="chat-footer col-12 col-md-9">
         <div class="container contain">
-            <form id="messageForm" class="col-12 d-block col-md-9 d-md-flex">
+            <form id="messageForm" class="col-12 col-md-9">
                 <textarea 
                     name="text"
                     minlength="1" 
                     type="text" 
-                    class="input col-8 mr-3 ml-2" 
+                    class="input col-8 mr-1" 
                     autofocus 
                     autocomplete="off"
                     [(ngModel)]="text"></textarea>
-                <input id="submit" type="button" value="Send" class="button col-2 col-md-3 ml-2" (click)="sendGroupMessage()">
+                <input id="submit" type="button" value="Send" class="button col-4 col-md-3" (click)="sendGroupMessage()">
             </form>
+            <button type="button" class="btn-dng mt-2 ml-3 mb-0 col-5 mx-auto m-md-0 col-md-2 d-md-none" (click)="leaveRoom()">Leave Room</button>
+            <button type="button" class="b mt-2 ml-3 mb-0 col-5 mx-auto m-md-0 col-md-2" routerLink="/">Back</button>
         </div>
     </div>
-
 </div>

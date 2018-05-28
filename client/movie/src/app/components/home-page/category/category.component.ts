@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { SocketIoService } from '../../../services/socket-io.service';
 
 @Component({
   selector: 'app-category',
@@ -7,35 +8,27 @@ import { Router } from '@angular/router';
   styleUrls: ['./category.component.css']
 })
 export class CategoryComponent implements OnInit {
-  // @ContentChild({ read: TemplateRef })
-  // child: TemplateRef<any>;
+  @Input() genre: any;
 
-  // @ViewChild('container', { read: ViewContainerRef })
-  // container: ViewContainerRef;
-
-  @Input() da: string;
-
-  data: string[] = [
-    'Hello',
-    'Hello',
-    'Hello',
-    'Hello',
-    'Hello',
-    'Hello',
-    'Hello',
-    'Hello',
-  ];
+  movies: Object[];
 
   constructor(
-    public router: Router
+    public router: Router,
+    private socketIo: SocketIoService,
   ) { }
 
   ngOnInit() {
-    console.log(this.da);
+    console.log(this.genre.category);
+    this.socketIo.getQuerriedMovies(this.genre.category).then((movies: any[]) => {
+      movies.forEach(movie => {
+        movie.url_thumbnail = `url(${ movie.url_thumbnail })`;
+      });
+      this.movies = movies;
+    });
   }
 
-  purchase(d) {
-    console.log('puchase', d);
-    this.router.navigate([`/purchase/${d}`]);
+  purchase(movie) {
+    console.log('puchase', movie);
+    this.router.navigate([`/purchase/${movie._id}`]);
   }
 }

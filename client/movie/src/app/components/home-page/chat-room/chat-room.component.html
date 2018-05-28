@@ -5,10 +5,10 @@
       <div class="card-body text-left p-1 pl-2" (click)="joinRoom(room.room_name, room._id)">
         <div class="card-text">{{room.roomNameShort}}</div>
         <small class="card-text">{{room.creator_name}}</small>
-        <div class="card-text text-right">{{room.room_size}} people</div>
+        <div class="card-text text-right mr-1" *ngIf="room.room_size !== 1">{{ room.room_size }} Members</div>
+        <div class="card-text text-right mr-1" *ngIf="room.room_size === 1">{{ room.room_size }} Member</div>
       </div>
     </div>
-
   </div>
   <button class="btn btn-primary btn-md" (click)="isCreateRoom = !isCreateRoom">
     Create a Room

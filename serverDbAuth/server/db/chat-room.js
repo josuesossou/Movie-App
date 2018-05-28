@@ -28,6 +28,11 @@ const ChatRoom = mongoose.model('Chat-room', {
             type: Boolean,
             require: true,
             trim: true,
+        },
+        socketId: {
+            type: String,
+            require: true,
+            trim: true,
         }
     }],
     room_size: {
